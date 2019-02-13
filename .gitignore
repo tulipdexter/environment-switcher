@@ -1,0 +1,14 @@
+# dependencies
+/node_modules
+
+# output
+dist
+
+# misc
+.DS_Store
+.cache
+yarn-debug.log*
+
+# ide
+.idea
+.idea/workspace.xml
