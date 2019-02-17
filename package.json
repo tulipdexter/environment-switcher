@@ -6,8 +6,8 @@
   "author": "David Paul <david.paul@springernature.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel src/options/index.html --out-dir dist/options",
-    "build": "parcel build src/options/index.html --out-dir dist/options"
+    "dev": "parcel ./options/src/index.html --out-dir options/dist --public-url /options/dist",
+    "build": "parcel build ./options/src/index.html --out-dir options/dist --public-url /options/dist"
   },
   "dependencies": {
     "preact": "^8.2.6"
