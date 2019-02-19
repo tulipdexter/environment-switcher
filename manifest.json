@@ -14,10 +14,10 @@
   "browser_action": {
     "default_icon": "src/icons/logo_48.png",
     "default_title": "Environment Switcher",
-    "default_popup": "browserAction/index.html",
+    "default_popup": "src/browserAction/index.html",
     "browser_style": true
   },
-  "options_page": "options/dist/index.html",
+  "options_page": "dist/options/index.html",
   "background": {
       "scripts": [
         "background.js"

@@ -1,0 +1,57 @@
+/**
+ * Palette
+ * Canadian Palette by Dmitri Litvinov
+**/
+
+:root {
+	--amour: #ee5253;
+	--jade-dust: #00d2d3;
+	--joust-blue: #54a0ff;
+	--storm-petrel: #8395a7;
+	--wild-caribbean-green: #1dd1a1;
+	--megaman: #48dbfb;
+	--imperial-primer: #222f3e;
+}
+
+html {
+	box-sizing: border-box;
+	font-size: 62.5%;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+}
+
+body {
+	margin: 0;
+	font-size: 1.6rem;
+	background-color: #f0efee;
+	color: var(--imperial-primer);
+}
+
+fieldset {
+	border: 0;
+	padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin-top: 0;
+}
+
+h1, .h1 {
+	font-size: 2.6rem;
+}
+
+h2, .h2 {
+	font-size: 2rem;
+}
+
+h3, .h3 {
+	font-size: 1.6rem;
+}
+
+h4, .h4 {
+	font-size: 1.4rem;
+}

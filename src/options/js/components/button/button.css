@@ -1,0 +1,15 @@
+.button {
+	font-size: 1.2rem;
+	padding: 1rem 1.5rem;
+	border-radius: 2rem;
+	border: 1px solid var(--storm-petrel);
+	color: var(--storm-petrel);
+	text-transform: uppercase;
+	transition: background-color .2s ease;
+}
+
+.button--primary {
+	background: var(--joust-blue);
+	border-color: var(--joust-blue);
+	color: white;
+}

@@ -1,4 +1,4 @@
-class Display extends Component {
+class DisplayNotes extends Component {
 
     constructor(props) {
         super(probs);

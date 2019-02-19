@@ -1,0 +1,26 @@
+.modal {
+	position: relative;
+}
+
+.modal__backdrop {
+	position: fixed;
+	background-color: rgba(0, 0, 0, 0.9);
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+}
+
+.modal__dialog {
+	background-color: white;
+	border-radius: 1rem;
+	max-width: 640px;
+	margin: 60px auto;
+	padding: 30px;
+}
+
+.modal__title {
+	font-size: 2rem;
+	text-transform: uppercase;
+	text-align: center;
+}

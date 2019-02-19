@@ -1,0 +1,13 @@
+.no-sites {
+	text-align: center;
+}
+
+.no-sites__emoji {
+	font-size: 5rem;
+	margin: 0 0 1rem;
+}
+
+.no-sites__message {
+	font-size: 1.4rem;
+	margin: 0;
+}

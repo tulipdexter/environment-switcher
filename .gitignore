@@ -8,6 +8,7 @@ dist
 .DS_Store
 .cache
 yarn-debug.log*
+yarn-error.log*
 
 # ide
 .idea

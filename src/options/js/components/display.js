@@ -1,5 +1,5 @@
 import { h, render, Component } from 'preact';
-import { NoSites } from "./no-sites";
+import { NoSites } from "./no-sites/no-sites"; // TODO: Should this be index?
 import { get } from "./storage";
 
 export class Display extends Component {

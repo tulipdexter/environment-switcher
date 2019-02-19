@@ -1,0 +1,26 @@
+.header {
+	padding: 1rem 2rem;
+	background-color: white;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 4rem;
+}
+
+.header__title {
+	font-size: 2rem;
+	font-weight: normal;
+	color: var(--storm-petrel);
+	margin-bottom: 0;
+}
+
+.header__brand {
+	display: flex;
+	align-items: center;
+}
+
+.header__strap {
+	font-size: 2rem;
+	font-weight: bold;
+	margin-left: 1rem;
+}
