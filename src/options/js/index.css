@@ -1,16 +1,17 @@
 /**
  * Palette
- * Canadian Palette by Dmitri Litvinov
+ * Chinese Palette by Wenjun from China
 **/
 
 :root {
-	--amour: #ee5253;
-	--jade-dust: #00d2d3;
-	--joust-blue: #54a0ff;
-	--storm-petrel: #8395a7;
-	--wild-caribbean-green: #1dd1a1;
-	--megaman: #48dbfb;
-	--imperial-primer: #222f3e;
+	--ufo-green: #2ed573;
+	--clear-chill: #1e90ff;
+	--watermelon: #ff4757;
+	--city-lights: #dfe4ea;
+	--twinkle-blue: #ced6e0;
+	--peace: #a4b0be;
+	--bay-wharf: #747d8c;
+	--prestige-blue: #2f3542;
 }
 
 html {
@@ -28,7 +29,7 @@ body {
 	margin: 0;
 	font-size: 1.6rem;
 	background-color: #f0efee;
-	color: var(--imperial-primer);
+	color: var(--prestige-blue);
 }
 
 fieldset {
@@ -49,9 +50,27 @@ h2, .h2 {
 }
 
 h3, .h3 {
-	font-size: 1.6rem;
+	text-transform: uppercase;
+	font-size: 1.4rem;
+	margin-bottom: 2.5rem;
 }
 
-h4, .h4 {
-	font-size: 1.4rem;
-}
+/*h4, .h4 {*/
+	/*text-transform: uppercase;*/
+	/*font-size: 1.4rem;*/
+	/*margin-bottom: 2.5rem;*/
+/*}*/
+
+/** Utilities **/
+
+.ma-0 { margin: 0; }
+.mb-2 { margin-bottom: 2rem; }
+.mb-3 { margin-bottom: 3rem; }
+
+.mt-3 { margin-top: 3rem; }
+
+.mr-1 { margin-right: 1rem; }
+
+.text-5 { font-size: 5rem; }
+
+.hide { display: none; }

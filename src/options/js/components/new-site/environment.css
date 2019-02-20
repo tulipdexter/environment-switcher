@@ -1,0 +1,23 @@
+.environment {
+	margin: 0 0 3rem 1rem;
+	padding-left: 2.5rem;
+	border-left: 1px solid var(--prestige-blue);
+	position: relative;
+}
+
+.environment__number {
+	font-size: 1.2rem;
+	font-weight: bold;
+	background-color: var(--prestige-blue);
+	color: white;
+	margin: 0;
+	border-radius: 5px;
+	width: 2rem;
+	height: 2rem;
+	line-height: calc(2rem);
+	text-align: center;
+	position: absolute;
+	left: 0;
+	top: 0;
+	transform: translateX(-50%);
+}

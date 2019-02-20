@@ -10,17 +10,25 @@ export const variant = {
 export class Button extends Component {
     constructor(props) {
         super(props);
+
+        // TODO: handle disabled state
+        this.state = {
+            disable: false
+        }
     }
 
-    // TODO: disabled state
+    static setVariant(key) {
+        const validVariant = variant.hasOwnProperty(key);
+        return validVariant ? variant[key] : variant['default'];
+    }
 
     render(props) {
-        const config = {
-            className: 'button' + (props.variant ? ` button--${props.variant}`: '')
-        };
-
         return (
-            <button class={config.className} onClick={this.props.onClick}>{props.children}</button>
+            <button class={`button button--${Button.setVariant(props.variant)}`}
+                    type={this.props.type}
+                    onClick={this.props.onClick}>
+                {props.children}
+            </button>
         )
     }
 }

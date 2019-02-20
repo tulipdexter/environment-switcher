@@ -4,7 +4,7 @@
 
 .modal__backdrop {
 	position: fixed;
-	background-color: rgba(0, 0, 0, 0.9);
+	background-color: rgba(47, 53, 66, 0.95);
 	top: 0;
 	left: 0;
 	width: 100vw;
@@ -15,12 +15,17 @@
 	background-color: white;
 	border-radius: 1rem;
 	max-width: 640px;
-	margin: 60px auto;
-	padding: 30px;
+	margin: 4rem auto;
+	padding: 2.5rem 3rem;
+	box-shadow: 0 4px 6px rgba(50, 50, 93, 0.5);
+	overflow: hidden;
 }
 
 .modal__title {
-	font-size: 2rem;
+	font-size: 1.4rem;
 	text-transform: uppercase;
 	text-align: center;
+	margin: -2.5rem -3rem 2.5rem;
+	padding: 2.5rem 3rem;
+	border-bottom: 1px solid var(--city-lights);
 }

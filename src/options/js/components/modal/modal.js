@@ -8,6 +8,7 @@ export class Modal extends Component {
             return null;
         }
 
+        // TODO, event listener on escape
         return (
             <div class="modal">
                 <div class="modal__backdrop">
@@ -15,7 +16,7 @@ export class Modal extends Component {
                         <h4 class="modal__title">{this.props.title}</h4>
                         { this.props.children }
                         <Button variant={variant.default} onClick={this.props.onClose}>Cancel</Button>
-                        <Button variant={variant.primary} onClick={this.props.onSave}>Save</Button>
+                        <Button variant={variant.primary} onClick={this.props.onSave} type="submit">Save</Button>
                     </div>
                 </div>
             </div>

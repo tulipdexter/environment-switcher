@@ -8,9 +8,9 @@
 }
 
 .header__title {
-	font-size: 2rem;
+	font-size: 1.6rem;
 	font-weight: normal;
-	color: var(--storm-petrel);
+	color: var(--bay-wharf);
 	margin-bottom: 0;
 }
 

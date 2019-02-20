@@ -1,0 +1,37 @@
+.form-field {
+	margin-bottom: 1.5rem;
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid var(--peace);
+}
+
+.form-field.has-focus {
+	border-bottom-color: var(--clear-chill);
+}
+
+.form-field:last-child {
+	margin-bottom: 0;
+}
+
+.form-field__label {
+	display: inline-block;
+	text-transform: uppercase;
+	font-size: 1.2rem;
+	margin-right: 2rem;
+	color: var(--bay-wharf);
+	flex-shrink: 0;
+	transform: translateY(1px);
+}
+
+.form-field__input {
+	display: block;
+	padding: 1rem 0;
+	border: 0;
+	width: 100%;
+	font-size: 1.5rem;
+}
+
+.form-field__input:focus {
+	outline: none;
+	border-color: var(--clear-chill);
+}
