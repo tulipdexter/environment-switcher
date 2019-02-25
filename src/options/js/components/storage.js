@@ -1,7 +1,11 @@
 export const get = (key) => {
     return new Promise(resolve => {
         // chrome.storage.sync.get('sites', result => resolve(JSON.parse(result)));
-        chrome.storage.sync.get(key, result => resolve(result));
+        if (chrome.storage) {
+            chrome.storage.sync.get(key, result => resolve(result));
+        } else {
+            resolve([]);
+        }
     });
 };
 
