@@ -3,8 +3,9 @@ import './button.css';
 
 // Allows the importing module to see what variants are available
 export const variant = {
+    default: 'default',
     primary: 'primary',
-    default: 'default'
+    link: 'link'
 };
 
 export class Button extends Component {
@@ -25,8 +26,8 @@ export class Button extends Component {
     render(props) {
         return (
             <button class={`button button--${Button.setVariant(props.variant)}`}
-                    type={this.props.type}
-                    onClick={this.props.onClick}>
+                    type={props.type}
+                    onClick={props.onClick}>
                 {props.children}
             </button>
         )

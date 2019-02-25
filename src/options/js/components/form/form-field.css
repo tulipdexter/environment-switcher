@@ -1,8 +1,11 @@
 .form-field {
 	margin-bottom: 1.5rem;
-	display: flex;
-	align-items: center;
 	border-bottom: 1px solid var(--peace);
+}
+
+.form-field__wrap {
+	display: flex;
+	align-items: baseline;
 }
 
 .form-field.has-focus {
@@ -14,21 +17,19 @@
 }
 
 .form-field__label {
-	display: inline-block;
 	text-transform: uppercase;
 	font-size: 1.2rem;
 	margin-right: 2rem;
 	color: var(--bay-wharf);
-	flex-shrink: 0;
-	transform: translateY(1px);
+	flex: 0 1 auto;
 }
 
 .form-field__input {
 	display: block;
-	padding: 1rem 0;
+	padding: 0 0 1rem;
 	border: 0;
-	width: 100%;
-	font-size: 1.5rem;
+	font-size: 1.4rem;
+	flex: 1 0 auto;
 }
 
 .form-field__input:focus {

@@ -5,11 +5,32 @@
 	border: 1px solid var(--bay-wharf);
 	color: var(--bay-wharf);
 	text-transform: uppercase;
-	transition: background-color .2s ease;
+	transition: background-color .2s ease, box-shadow .25s ease;
+}
+
+.button:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px var(--lime-soap);
 }
 
 .button--primary {
 	background: var(--clear-chill);
 	border-color: var(--clear-chill);
 	color: white;
+}
+
+.button--link {
+	background: transparent;
+	padding: 0;
+	border: 0;
+	color: var(--clear-chill);
+	cursor: pointer;
+}
+
+.button--link:hover {
+	text-decoration: underline;
+}
+
+.button--link:focus {
+	box-shadow: none;
 }

@@ -9,6 +9,7 @@
 	left: 0;
 	width: 100vw;
 	height: 100vh;
+	overflow: auto;
 }
 
 .modal__dialog {
@@ -21,11 +22,22 @@
 	overflow: hidden;
 }
 
-.modal__title {
+.modal__header {
 	font-size: 1.4rem;
 	text-transform: uppercase;
 	text-align: center;
 	margin: -2.5rem -3rem 2.5rem;
 	padding: 2.5rem 3rem;
 	border-bottom: 1px solid var(--city-lights);
+}
+
+.modal__footer {
+	margin: 2.5rem -3rem 0;
+	padding: 2.5rem 3rem 0;
+	border-top: 1px solid var(--city-lights);
+	text-align: right;
+}
+
+.modal__footer > button {
+	margin-left: 1rem;
 }

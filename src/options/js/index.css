@@ -4,6 +4,7 @@
 **/
 
 :root {
+	--lime-soap: #7bed9f;
 	--ufo-green: #2ed573;
 	--clear-chill: #1e90ff;
 	--watermelon: #ff4757;
@@ -35,6 +36,7 @@ body {
 fieldset {
 	border: 0;
 	padding: 0;
+	margin: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -70,7 +72,11 @@ h3, .h3 {
 .mt-3 { margin-top: 3rem; }
 
 .mr-1 { margin-right: 1rem; }
+.ml-1 { margin-left: 1rem; }
 
 .text-5 { font-size: 5rem; }
 
 .hide { display: none; }
+
+.link-like { color: var(--clear-chill); }
+.link-like:hover { text-decoration: underline; }
