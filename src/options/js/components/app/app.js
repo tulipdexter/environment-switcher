@@ -1,5 +1,4 @@
 import {h, render, Component} from 'preact';
-import {get} from "../storage";
 import {Header} from "../header/header";
 import {Button, variant} from "../button/button";
 import {Display} from "../display";
@@ -15,20 +14,8 @@ export class App extends Component {
         this.toggleModal = this.toggleModal.bind(this);
 
         this.state = {
-            data: [],
-            loaded: false,
             showModal: false
         };
-    }
-
-    componentDidMount() {
-        return get('sites')
-            .then(data => {
-                this.setState({
-                    data: data,
-                    loaded: true
-                });
-            });
     }
 
     toggleModal() {
@@ -37,11 +24,7 @@ export class App extends Component {
         });
     };
 
-    render(props, {loaded, showModal, data}) {
-        if (!loaded) {
-            return <div>loading...</div>;
-        }
-
+    render(props, {showModal}) {
         return (
             <div>
                 <Header />
@@ -60,7 +43,7 @@ export class App extends Component {
                                 </ModalActions>
                             </NewSiteForm>
                         </Modal>
-                        <Display sites={data}/>
+                        <Display />
                     </div>
                 </div>
             </div>

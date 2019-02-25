@@ -1,10 +1,13 @@
 import {h} from 'preact';
-import {NoSites} from "./no-sites/no-sites"; // TODO: Should this be index?
+import {siteLoader} from "./SiteLoader";
+import {NoSites} from "./no-sites/no-sites";
 
-export const Display = props => {
+// siteLoader returns a function that takes a Component
+// and then returns a wrapper component
+export const Display = siteLoader()(props => {
     if (props.sites.length > 0) {
         return (<p>Site list will go here</p>);
     } else {
-        return (<NoSites/>);
+        return <NoSites/>
     }
-};
+});
