@@ -1,5 +1,5 @@
 import { h, render, Component } from 'preact';
-import './form-field.css';
+import './form.css';
 
 export class FormField extends Component {
     constructor(props) {

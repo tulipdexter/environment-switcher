@@ -1,6 +1,6 @@
 .button {
 	font-size: 1.2rem;
-	padding: 1rem 1.5rem;
+	padding: 0.75rem 1.25rem;
 	border-radius: 2rem;
 	border: 1px solid var(--bay-wharf);
 	color: var(--bay-wharf);
