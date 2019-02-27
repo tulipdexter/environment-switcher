@@ -28,8 +28,10 @@ export class NewSiteForm extends Component {
     // No state mutation
     // It's possible that new Array(this.state)
     addEnv() {
+        const nextItemId = this.nextItemId++;
+
         this.setState({
-            envs: [...this.state.envs, this.nextItemId++]
+            envs: [...this.state.envs, {nextItemId: { name: '', url: '' } }]
         });
 
         console.log(this.state);
