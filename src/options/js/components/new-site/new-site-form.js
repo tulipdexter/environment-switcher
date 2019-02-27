@@ -11,39 +11,34 @@ export class NewSiteForm extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
 
         this.nextItemId = 0;
+        this.minEnvs = 2;
 
         this.state = {
-            defaultEnvs: 2,
+            name: '',
             envs: [],
             submitted: false
         };
 
-        // Show two envs by default
-        for (let i = 0; i < this.state.defaultEnvs; i++) {
+        // Setup initial envs
+        for (let i = 0; i < this.minEnvs; i++) {
             this.addEnv();
         }
     }
 
-    // Initialize a counter that will increment
-    // for each item ID
-    makeItem() {
-        // Create a new ID
-        return {
-            id: this.nextItemId++
-        };
-    }
-
     // No state mutation
+    // It's possible that new Array(this.state)
     addEnv() {
         this.setState({
-            envs: [...this.state.envs, this.makeItem()]
+            envs: [...this.state.envs, this.nextItemId++]
         });
+
+        console.log(this.state);
     };
 
     handleSubmit(e) {
         e.preventDefault();
         this.setState({
-            submitted: true
+            submitted: true,
         });
 
         // Do the chrome stuff here
@@ -52,6 +47,8 @@ export class NewSiteForm extends Component {
 
     // TODO: You are here
     // Need to get the input values out
+    // This is where you reorg the state
+    // or 
     saveSite() {
         if (this.state.submitted) {
 
@@ -70,11 +67,25 @@ export class NewSiteForm extends Component {
     //     return sites;
     // };
 
-    handleInputChange(e) {
+    handleInputChange(e, i) {
         const target = e.target;
 
-        this.setState({
-            [target.name]: target.value
+        this.setState(state => {
+            const envs = state.envs.map((env, j) => {
+                if (j === i) {
+                    return {
+                        [env]: {
+                            [target.name]: target.value
+                        }
+                    }
+                } else {
+                    return env
+                }
+            });
+
+            return {
+                envs
+            }
         });
     }
 
@@ -92,27 +103,28 @@ export class NewSiteForm extends Component {
                     />
                 </div>
                 <h3>Environments</h3>
-                {envs.map(env => {
-                    const id = env.id + 1;
+                {envs.map((env, index) => {
+                    const envNumber = index + 1;
+                    console.log(this.state.envs[index]);
 
                     return (
                         <fieldset>
                             <div className="environment">
-                                <h4 className="environment__number">{id}</h4>
+                                <h4 className="environment__number">{envNumber}</h4>
                                 <div className="environment__fields">
                                     {/* Name of the environment */}
                                     <Input type={'text'}
                                            title={'Name'}
-                                           name={'env' + id + '-name'}
-                                           value={this.state['envName']}
-                                           handleChange={this.handleInputChange}
+                                           name={'env' + index + '-name'}
+                                           value={this.state.envs[index]['env' + index + '-name']}
+                                           handleChange={e => this.handleInputChange(e, index)}
                                     />
                                     {/* Url of the environment */}
                                     <Input type={'text'}
                                            title={'Url'}
-                                           name={'env' + id + '-url'}
-                                           value={this.state['envUrl']}
-                                           handleChange={this.handleInputChange}
+                                           name={'env' + index + '-url'}
+                                           value={this.state.envs[index]['env' + index + '-url']}
+                                           handleChange={e => this.handleInputChange(e, index)}
                                     />
                                 </div>
                             </div>
