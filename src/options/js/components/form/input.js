@@ -29,6 +29,8 @@ export class Input extends Component {
                     value={props.value}
                     onChange={props.handleChange}
                     placeholder={props.placeholder}
+                    onFocus={this.toggleFocus}
+                    onBlur={this.toggleFocus}
                 />
             </div>
         )

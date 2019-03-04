@@ -10,7 +10,6 @@ export class NewSiteForm extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
-        this.nextItemId = 0;
         this.minEnvs = 2;
 
         this.state = {
@@ -28,13 +27,9 @@ export class NewSiteForm extends Component {
     // No state mutation
     // It's possible that new Array(this.state)
     addEnv() {
-        const nextItemId = this.nextItemId++;
-
         this.setState({
-            envs: [...this.state.envs, {nextItemId: { name: '', url: '' } }]
+            envs: [...this.state.envs, { name: '', url: '' }]
         });
-
-        console.log(this.state);
     };
 
     handleSubmit(e) {
@@ -43,8 +38,11 @@ export class NewSiteForm extends Component {
             submitted: true,
         });
 
+        // Validate
+
+
         // Do the chrome stuff here
-        console.log(this.state);
+        // console.log(this.state);
     }
 
     // TODO: You are here
@@ -70,29 +68,18 @@ export class NewSiteForm extends Component {
     // };
 
     handleInputChange(e, i) {
-        const target = e.target;
+        const {name, value} = e.target;
 
-        this.setState(state => {
-            const envs = state.envs.map((env, j) => {
-                if (j === i) {
-                    return {
-                        [env]: {
-                            [target.name]: target.value
-                        }
-                    }
-                } else {
-                    return env
-                }
-            });
-
-            return {
-                envs
-            }
-        });
+        const envs = [...this.state.envs];
+        envs[i] = {
+            ...envs[i],
+            [name]: value
+        };
+        this.setState({ envs });
     }
 
     render(props, {envs}) {
-        console.log(this.state);
+        console.log(envs);
         return (
             <form onSubmit={this.handleSubmit}>
                 <div class="mb-3">
@@ -107,7 +94,6 @@ export class NewSiteForm extends Component {
                 <h3>Environments</h3>
                 {envs.map((env, index) => {
                     const envNumber = index + 1;
-                    console.log(this.state.envs[index]);
 
                     return (
                         <fieldset>
@@ -117,15 +103,15 @@ export class NewSiteForm extends Component {
                                     {/* Name of the environment */}
                                     <Input type={'text'}
                                            title={'Name'}
-                                           name={'env' + index + '-name'}
-                                           value={this.state.envs[index]['env' + index + '-name']}
+                                           name={'name'}
+                                           value={envs[index].name}
                                            handleChange={e => this.handleInputChange(e, index)}
                                     />
                                     {/* Url of the environment */}
                                     <Input type={'text'}
                                            title={'Url'}
-                                           name={'env' + index + '-url'}
-                                           value={this.state.envs[index]['env' + index + '-url']}
+                                           name={'url'}
+                                           value={envs[index].url}
                                            handleChange={e => this.handleInputChange(e, index)}
                                     />
                                 </div>
