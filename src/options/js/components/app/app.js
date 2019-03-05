@@ -1,6 +1,6 @@
 import {h, render, Component} from 'preact';
 import {Header} from "../header/header";
-import {Button, variant} from "../button/button";
+import {Button, variant, size} from "../button/button";
 import {Display} from "../display";
 import {Modal, ModalActions} from "../modal/modal";
 import {NewSiteForm} from "../new-site/new-site-form";
@@ -31,7 +31,7 @@ export class App extends Component {
                 <div class="container">
                     <div class="box">
                         <div class="add-new-site">
-                            <Button variant={variant.primary} onClick={this.toggleModal}>Add new site</Button>
+                            <Button variant={variant.primary} size={size.lg} onClick={this.toggleModal}>Add new site</Button>
                         </div>
                         <Modal show={showModal}
                                onCancel={this.toggleModal}

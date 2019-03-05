@@ -1,4 +1,5 @@
 import {h, render, Component} from 'preact';
+import {set} from "../storage";
 import {Button, variant} from "../button/button";
 import {Input} from "../form/input";
 import './new-site.css';
@@ -13,7 +14,7 @@ export class NewSiteForm extends Component {
         this.minEnvs = 2;
 
         this.state = {
-            name: '',
+            siteName: '',
             envs: [],
             submitted: false
         };
@@ -34,26 +35,16 @@ export class NewSiteForm extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        this.setState({
-            submitted: true,
+
+        // This needs to use the context
+        chrome.storage.sync.set({'sites': this.state}, () => {
+            console.log('boom');
         });
-
-        // Validate
-
-
-        // Do the chrome stuff here
-        // console.log(this.state);
     }
 
-    // TODO: You are here
-    // Need to get the input values out
-    // This is where you reorg the state
-    // or 
-    saveSite() {
-        if (this.state.submitted) {
-
-        }
-    }
+    // componentDidMount() {
+    //
+    // }
 
     // const createStore = form => {
     //     const siteNameField = form.querySelector('.form-field');
@@ -70,16 +61,19 @@ export class NewSiteForm extends Component {
     handleInputChange(e, i) {
         const {name, value} = e.target;
 
-        const envs = [...this.state.envs];
-        envs[i] = {
-            ...envs[i],
-            [name]: value
-        };
-        this.setState({ envs });
+        if (name === 'siteName') {
+            this.setState({ siteName: value })
+        } else {
+            const envs = [...this.state.envs];
+            envs[i] = {
+                ...envs[i],
+                [name]: value
+            };
+            this.setState({ envs });
+        }
     }
 
     render(props, {envs}) {
-        console.log(envs);
         return (
             <form onSubmit={this.handleSubmit}>
                 <div class="mb-3">
@@ -97,23 +91,23 @@ export class NewSiteForm extends Component {
 
                     return (
                         <fieldset>
-                            <div className="environment">
-                                <h4 className="environment__number">{envNumber}</h4>
-                                <div className="environment__fields">
-                                    {/* Name of the environment */}
-                                    <Input type={'text'}
-                                           title={'Name'}
-                                           name={'name'}
-                                           value={envs[index].name}
-                                           handleChange={e => this.handleInputChange(e, index)}
-                                    />
-                                    {/* Url of the environment */}
-                                    <Input type={'text'}
-                                           title={'Url'}
-                                           name={'url'}
-                                           value={envs[index].url}
-                                           handleChange={e => this.handleInputChange(e, index)}
-                                    />
+                            <div class="environment">
+                                <h4 class="environment__number">{envNumber}</h4>
+                                <div class="environment__fields">
+                                    <div class="form-group">
+                                        {/* Name of the environment */}
+                                        <Input type={'text'}
+                                               title={'Name'}
+                                               name={'name'}
+                                               value={envs[index].name}
+                                               handleChange={e => this.handleInputChange(e, index)} />
+                                        {/* Url of the environment */}
+                                        <Input type={'text'}
+                                               title={'Url'}
+                                               name={'url'}
+                                               value={envs[index].url}
+                                               handleChange={e => this.handleInputChange(e, index)} />
+                                    </div>
                                 </div>
                             </div>
                         </fieldset>
