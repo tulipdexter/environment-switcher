@@ -24,6 +24,17 @@ export class App extends Component {
         });
     };
 
+
+    handleSubmit(e, siteObject) {
+        // TODO proptypes for siteObject
+        e.preventDefault();
+        console.log('got here');
+
+        chrome.storage.sync.set({'sites': siteObject}, () => {
+            console.log('boom');
+        });
+    }
+
     render(props, {showModal}) {
         return (
             <div>
@@ -36,7 +47,7 @@ export class App extends Component {
                         <Modal show={showModal}
                                onCancel={this.toggleModal}
                                header={"Add New Site"}>
-                            <NewSiteForm>
+                            <NewSiteForm thing={this.handleSubmit}>
                                 <ModalActions>
                                     <Button variant={variant.default} onClick={this.toggleModal} type="button">Cancel</Button>
                                     <Button variant={variant.primary} type="submit">Save</Button>

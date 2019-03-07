@@ -9,7 +9,7 @@ export class NewSiteForm extends Component {
         super(props);
         this.addEnv = this.addEnv.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
 
         this.minEnvs = 2;
 
@@ -26,37 +26,11 @@ export class NewSiteForm extends Component {
     }
 
     // No state mutation
-    // It's possible that new Array(this.state)
     addEnv() {
         this.setState({
             envs: [...this.state.envs, { name: '', url: '' }]
         });
     };
-
-    handleSubmit(e) {
-        e.preventDefault();
-
-        // This needs to use the context
-        chrome.storage.sync.set({'sites': this.state}, () => {
-            console.log('boom');
-        });
-    }
-
-    // componentDidMount() {
-    //
-    // }
-
-    // const createStore = form => {
-    //     const siteNameField = form.querySelector('.form-field');
-    //     const siteNameValue = siteNameField.querySelector('input').value;
-    //     const sites = {};
-    //
-    //     sites[siteNameValue] = {
-    //         "environments": collateEnvs(form)
-    //     };
-    //
-    //     return sites;
-    // };
 
     handleInputChange(e, i) {
         const {name, value} = e.target;
@@ -69,13 +43,13 @@ export class NewSiteForm extends Component {
                 ...envs[i],
                 [name]: value
             };
-            this.setState({ envs });
+            this.setState({ envs });    
         }
     }
 
     render(props, {envs}) {
         return (
-            <form onSubmit={this.handleSubmit}>
+            <form thing={props.handleSubmit(this.state)}>
                 <div class="mb-3">
                     {/* Name of the site */}
                     <Input type={'text'}
