@@ -49,14 +49,14 @@ export class NewSiteForm extends Component {
 
     render(props, {envs}) {
         return (
-            <form thing={props.handleSubmit(this.state)}>
+            <form onSubmit={e => props.handleSubmit(e, this.state)}>
                 <div class="mb-3">
                     {/* Name of the site */}
                     <Input type={'text'}
                            title={'Site name'}
                            name={'siteName'}
                            value={this.state['siteName']}
-                           handleChange={this.handleInputChange}
+                           handleChange={e => this.handleInputChange(e)}
                     />
                 </div>
                 <h3>Environments</h3>
