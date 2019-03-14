@@ -11,33 +11,40 @@ export class App extends Component {
     constructor(props) {
         super(props);
 
-        this.toggleModal = this.toggleModal.bind(this);
+        this.toggleState = this.toggleState.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
         this.state = {
             loaded: false,
+            saving: false,
             showModal: false,
             sites: []
         };
     }
 
-    toggleModal() {
-        this.setState({
-            showModal: !this.state.showModal
-        });
+    toggleState(key) {
+        this.setState(prevState => ({
+            [key]: !prevState[key]
+        }));
     };
 
     handleSubmit(e, siteObject) {
         // TODO proptypes for siteObject
         e.preventDefault();
 
-        this.setState({
-            sites: [...this.state.sites, siteObject]
-        });
+        // Set saving to true; (or loading?)
+        // if it's saving, disable the save and cancel buttons
+        // set the chrome storage and in the callback set the state of sites AND saving.
 
-        chrome.storage.sync.set({'sites': this.state.sites}, () => {
-            console.log('Sites saved');
-            this.toggleModal();
+        const updatedSites = [...this.state.sites, siteObject];
+        this.toggleState('saving');
+
+        chrome.storage.sync.set({'sites': updatedSites}, () => {
+            this.setState({
+                sites: updatedSites
+            });
+            this.toggleState('showModal');
+            this.toggleState('saving');
         });
     }
 
@@ -48,8 +55,6 @@ export class App extends Component {
                 loaded: true,
                 sites: data.sites
             });
-
-            console.log('sites', data.sites);
         });
     }
 
@@ -64,17 +69,20 @@ export class App extends Component {
                     <div class="container">
                         <div class="box">
                             <div class="add-new-site">
-                                <Button variant={variant.primary} size={size.lg} onClick={this.toggleModal}>Add new
-                                    site</Button>
+                                <Button variant={variant.primary}
+                                        size={size.lg}
+                                        onClick={() => this.toggleState('showModal')}>Add new site</Button>
                             </div>
                             <Modal show={showModal}
-                                   onCancel={this.toggleModal}
+                                   onCancel={() => this.toggleState('showModal')}
                                    header={"Add New Site"}>
                                 <NewSiteForm handleSubmit={this.handleSubmit}>
                                     <ModalActions>
-                                        <Button variant={variant.default} onClick={this.toggleModal}
+                                        <Button variant={variant.default}
+                                                onClick={() => this.toggleState('showModal')}
                                                 type="button">Cancel</Button>
-                                        <Button variant={variant.primary} type="submit">Save</Button>
+                                        <Button variant={variant.primary}
+                                                type="submit">Save</Button>
                                     </ModalActions>
                                 </NewSiteForm>
                             </Modal>
