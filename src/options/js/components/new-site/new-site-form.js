@@ -1,6 +1,6 @@
 import {h, render, Component} from 'preact';
-import {set} from "../storage";
 import {Button, variant} from "../button/button";
+import {Environment} from "./environment";
 import {Input} from "../form/input";
 import './new-site.css';
 
@@ -9,14 +9,15 @@ export class NewSiteForm extends Component {
         super(props);
         this.addEnv = this.addEnv.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
+        this.validate = this.validate.bind(this);
 
         this.minEnvs = 2;
 
         this.state = {
             siteName: '',
             envs: [],
-            submitted: false
+            submitted: false,
+            valid: false
         };
 
         // Setup initial envs
@@ -38,7 +39,7 @@ export class NewSiteForm extends Component {
         if (name === 'siteName') {
             this.setState({ siteName: value })
         } else {
-            const envs = [...this.state.envs];
+            const envs = [...this.state.envs]; // Already an array? No need to spread
             envs[i] = {
                 ...envs[i],
                 [name]: value
@@ -47,9 +48,34 @@ export class NewSiteForm extends Component {
         }
     }
 
+    validate() {
+        return new Promise((resolve, reject) => {
+            if (this.state.siteName.trim().length === 0) reject();
+            if (this.state.envs.length) {
+                console.log('here');
+                return Promise.all(Object.entries(this.state.envs).map(([idx, env]) => {
+                    return new Promise((resolve, reject) => {
+                        const validFields = (env.name.trim().length > 0 && env.url.trim().length > 0);
+                        if (validFields) {
+                            resolve()
+                        } else {
+                            reject();
+                        }
+                    });
+                }))
+                    .then(() => resolve())
+                    .catch(() => reject());
+            }
+        });
+    }
+
     render(props, {envs}) {
+        // console.log('test',this.validate().then(() => console.log('yay')).catch(() => console.log('Nay')));
+        //     this.validate()
+        //         .then(() => true)
+        //         .catch(() => false);
         return (
-            <form onSubmit={e => props.handleSubmit(e, this.state)}>
+            <form onSubmit={e => props.handleSubmit(e, this.state)} >
                 <div class="mb-3">
                     {/* Name of the site */}
                     <Input type={'text'}
@@ -57,34 +83,13 @@ export class NewSiteForm extends Component {
                            name={'siteName'}
                            value={this.state['siteName']}
                            handleChange={e => this.handleInputChange(e)}
-                    />
+                           required />
                 </div>
                 <h3>Environments</h3>
                 {envs.map((env, index) => {
                     const envNumber = index + 1;
-
                     return (
-                        <fieldset>
-                            <div class="environment">
-                                <h4 class="environment__number">{envNumber}</h4>
-                                <div class="environment__fields">
-                                    <div class="form-group">
-                                        {/* Name of the environment */}
-                                        <Input type={'text'}
-                                               title={'Name'}
-                                               name={'name'}
-                                               value={envs[index].name}
-                                               handleChange={e => this.handleInputChange(e, index)} />
-                                        {/* Url of the environment */}
-                                        <Input type={'text'}
-                                               title={'Url'}
-                                               name={'url'}
-                                               value={envs[index].url}
-                                               handleChange={e => this.handleInputChange(e, index)} />
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
+                        <Environment key={index} onInvalid={this.onInvalid} onValid={this.onValid} env={envNumber} />
                     )
                 })}
                 <div class="add-environment">

@@ -13,13 +13,22 @@ export class App extends Component {
 
         this.toggleState = this.toggleState.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleValidation = this.handleValidation.bind(this);
+        this.clearStorage = this.clearStorage.bind(this);
 
         this.state = {
             loaded: false,
             saving: false,
             showModal: false,
-            sites: []
+            formValid: false,
+            sites: [],
         };
+    }
+
+    clearStorage() {
+        chrome.storage.sync.clear(() => {
+            console.log('storage cleared');
+        });
     }
 
     toggleState(key) {
@@ -31,17 +40,18 @@ export class App extends Component {
     handleSubmit(e, siteObject) {
         // TODO proptypes for siteObject
         e.preventDefault();
+        console.log(siteObject);
 
         // Set saving to true; (or loading?)
         // if it's saving, disable the save and cancel buttons
         // set the chrome storage and in the callback set the state of sites AND saving.
-
+        console.log('sites', this.state.sites);
         const updatedSites = [...this.state.sites, siteObject];
         this.toggleState('saving');
 
         chrome.storage.sync.set({'sites': updatedSites}, () => {
-            this.setState({
-                sites: updatedSites
+            this.setState({sites: updatedSites}, () => {
+
             });
             this.toggleState('showModal');
             this.toggleState('saving');
@@ -50,22 +60,41 @@ export class App extends Component {
 
     componentDidMount() {
         chrome.storage.sync.get('sites', data => {
-            console.log('got here');
+            console.log('data', data);
+            console.log(data.sites);
             this.setState({
                 loaded: true,
-                sites: data.sites
             });
+            if (data.sites && data.sites.length) {
+                this.setState({
+                    sites: data.sites
+                });
+            }
         });
     }
 
-    render(props, {loaded, showModal, sites}) {
+    handleValidation(isValid) {
+        isValid
+            // .then(() => this.setState({
+            //     formValid: true,
+            // }))
+            // .catch(() => this.setState({
+            //     formValid: false,
+            // }));
+    }
+
+    render(props, {loaded, showModal, sites, formValid}) {
         if (!loaded) {
             // TODO: Spinner of some sort
             return <div>Loading...</div>;
         } else {
+            console.log('valid', formValid);
             return (
                 <div>
                     <Header/>
+                    <Button variant={variant.default}
+                            onClick={this.clearStorage}
+                            type="button">Clear storage</Button>
                     <div class="container">
                         <div class="box">
                             <div class="add-new-site">
@@ -76,7 +105,7 @@ export class App extends Component {
                             <Modal show={showModal}
                                    onCancel={() => this.toggleState('showModal')}
                                    header={"Add New Site"}>
-                                <NewSiteForm handleSubmit={this.handleSubmit}>
+                                <NewSiteForm handleSubmit={this.handleSubmit} handleValidation={this.handleValidation}>
                                     <ModalActions>
                                         <Button variant={variant.default}
                                                 onClick={() => this.toggleState('showModal')}

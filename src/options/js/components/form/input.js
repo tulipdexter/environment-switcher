@@ -12,9 +12,9 @@ export class Input extends Component {
     }
 
     toggleFocus() {
-        this.setState({
-            hasFocus: !this.state.hasFocus
-        });
+        this.setState(prevState => ({
+            hasFocus: !prevState.hasFocus
+        }));
     }
 
     render(props, {hasFocus}) {
@@ -27,6 +27,7 @@ export class Input extends Component {
                     name={props.name}
                     type={props.type}
                     value={props.value}
+                    required={props.required}
                     onChange={props.handleChange}
                     placeholder={props.placeholder}
                     onFocus={this.toggleFocus}
