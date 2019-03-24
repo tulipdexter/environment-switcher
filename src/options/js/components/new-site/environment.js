@@ -7,25 +7,65 @@ export class Environment extends Component {
         super(props);
         this.validate = this.validate.bind(this);
 
+        // Note, need the name: false and the message: null
+        // because it could remain invalid but have a different message
         this.state = {
             name: null,
             url: null,
-            isValid: false
+            validation: {
+                name: {
+                    valid: false,
+                    message: null
+                },
+                url: {
+                    valid: false,
+                    message: null
+                }
+            }
         }
+    }
+
+    // onChange happens to input
+    // the value of that input must be set in state
+    // check if it's valid
+    // if it's valid state has changed, 
+
+    validate(fieldName, value) {
+        const isRequiredMessage = fieldName + ' is required';
+        const prevMessage = this.state.validation.fieldName.message; // TODO: fieldName may not work with dot notation
+        let newMessage;
+
+        // if validation.name !== this.state.valiation.name
+
+        switch(fieldName) {
+            case 'name':
+                newMessage = (!value || !value.trim().length > 0) ? isRequiredMessage : null; 
+                break;
+            case 'url':
+                // TODO: Here will check it's a valid URL or valid regex or something
+                break;
+            default:
+                break;
+        }
+
+        if (newMessage !== prevMessage) {
+            // You are here
+            // once you validate this field, how will you know if 
+            // the other field(s) are valid?
+        }
+
+        // if (valid.name !== this.state.valid.name) {
+        //     this.setState({ valid: {name: }}) // need prev state
+        // }
+
+        
     }
 
     handleInputChange(e) {
         const {name, value} = e.target;
-        this.setState({
-            [name]: value
+        this.setState({[name]: value}, () => {
+            this.validate(name, value)
         });
-    }
-
-    validate(name, url) {
-        return {
-            name: !name || name.trim().length === 0 ? 'Name is required' : false,
-            url: !url || url.trim().length === 0 ? 'Url is required' : false
-        }
     }
 
     // TODO:
@@ -33,9 +73,7 @@ export class Environment extends Component {
 
     }
 
-    render(props, {name, url}) {
-        const errors = this.validate(name, url);
-        console.log(errors.name);
+    render(props, {name, url, validation}) {
         return (
             <fieldset>
                 <div className="environment">
@@ -48,14 +86,14 @@ export class Environment extends Component {
                                    name={'name'}
                                    value={name}
                                    handleChange={e => this.handleInputChange(e)} />
-                            {errors.name && <span class="error">{errors.name}</span>}
+                            {validation.name && <span class="error">{valid.name}</span>}
                             {/* Url of the environment */}
                             <Input type={'text'}
                                    title={'Url'}
                                    name={'url'}
                                    value={url}
                                    handleChange={e => this.handleInputChange(e)} />
-                            {errors.url && <span class="error">{errors.url}</span>}
+                            {validation.url && <span class="error">{validation.url}</span>}
                         </div>
                     </div>
                 </div>
