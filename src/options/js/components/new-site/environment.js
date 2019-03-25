@@ -13,29 +13,17 @@ export class Environment extends Component {
             name: null,
             url: null,
             validation: {
-                name: {
-                    valid: false,
-                    message: null
-                },
-                url: {
-                    valid: false,
-                    message: null
-                }
+                name: null,
+                url: null
             }
         }
     }
 
-    // onChange happens to input
-    // the value of that input must be set in state
-    // check if it's valid
-    // if it's valid state has changed, 
-
     validate(fieldName, value) {
         const isRequiredMessage = fieldName + ' is required';
-        const prevMessage = this.state.validation.fieldName.message; // TODO: fieldName may not work with dot notation
+        const prevValidationState = this.state.validation;
+        const prevMessage = prevValidationState.fieldName; // TODO: fieldName may not work with dot notation
         let newMessage;
-
-        // if validation.name !== this.state.valiation.name
 
         switch(fieldName) {
             case 'name':
@@ -48,10 +36,24 @@ export class Environment extends Component {
                 break;
         }
 
+        // if a change made 1 valid
+        // are they all now valid
+        // if yes, you can call the props.onValid
+        // if a change made 1 invalid
+        // if it is the only invalid one, call the props.onInvalid
+
         if (newMessage !== prevMessage) {
+            // if new message is null (it's valid)
+
             // You are here
+
+            //Object.values(prevValidationState).map(value => {
+
+            // });
+
             // once you validate this field, how will you know if 
             // the other field(s) are valid?
+            // Object.keys.map
         }
 
         // if (valid.name !== this.state.valid.name) {
