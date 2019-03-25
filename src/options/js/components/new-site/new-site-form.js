@@ -93,7 +93,7 @@ export class NewSiteForm extends Component {
                     )
                 })}
                 <div class="add-environment">
-                    <Button variant={variant.link} onClick={this.addEnv} type="button">Add Environment</Button>
+                    <Button variant={variant.link} onClick={this.addEnv} type="button" disabled>Add Environment</Button>
                 </div>
                 {props.children}
             </form>

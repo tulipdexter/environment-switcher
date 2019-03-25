@@ -39,6 +39,7 @@ export class Button extends Component {
         return (
             <button class={`button button--${Button.setVariant(props.variant)} button--${Button.setSize(props.size)}`}
                     type={props.type}
+                    disabled={props.disabled}
                     onClick={props.onClick}>
                 {props.children}
             </button>
