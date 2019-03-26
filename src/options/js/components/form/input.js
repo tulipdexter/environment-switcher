@@ -39,17 +39,13 @@ export class Input extends Component {
         if (isValid !== this.state.isValid) {
             this.setState(prevState => ({
                 isValid: !prevState.isValid
-            }));
-
-            console.log(this.state.isValid);
+            }), this.props.onValidationChange(isValid));
         }
     }
 
     handleInputChange(e) {
-        console.log('ere');
         const {value} = e.target;
         this.setState({value: value}, () => {
-            console.log(this.props);
             if (this.props.required) {
                 this.validate(value);
             }
