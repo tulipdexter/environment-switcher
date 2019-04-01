@@ -45,7 +45,6 @@ export class App extends Component {
         // Set saving to true; (or loading?)
         // if it's saving, disable the save and cancel buttons
         // set the chrome storage and in the callback set the state of sites AND saving.
-        console.log('sites', this.state.sites);
         const updatedSites = [...this.state.sites, siteObject];
         this.toggleState('saving');
 
@@ -74,7 +73,7 @@ export class App extends Component {
     }
 
     handleValidation(isValid) {
-        isValid
+        // isValid
             // .then(() => this.setState({
             //     formValid: true,
             // }))

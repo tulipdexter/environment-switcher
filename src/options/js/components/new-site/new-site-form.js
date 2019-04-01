@@ -8,8 +8,6 @@ export class NewSiteForm extends Component {
     constructor(props) {
         super(props);
         this.addEnv = this.addEnv.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.validate = this.validate.bind(this);
 
         this.minEnvs = 2;
 
@@ -17,7 +15,12 @@ export class NewSiteForm extends Component {
             siteName: '',
             envs: [],
             submitted: false,
-            valid: false
+            validation: {
+                siteName: {
+                    isValid: false,
+                    message: null
+                }
+            }
         };
 
         // Setup initial envs
@@ -33,40 +36,8 @@ export class NewSiteForm extends Component {
         });
     };
 
-    handleInputChange(e, i) {
-        const {name, value} = e.target;
-
-        if (name === 'siteName') {
-            this.setState({ siteName: value })
-        } else {
-            const envs = [...this.state.envs]; // Already an array? No need to spread
-            envs[i] = {
-                ...envs[i],
-                [name]: value
-            };
-            this.setState({ envs });    
-        }
-    }
-
-    validate() {
-        return new Promise((resolve, reject) => {
-            if (this.state.siteName.trim().length === 0) reject();
-            if (this.state.envs.length) {
-                console.log('here');
-                return Promise.all(Object.entries(this.state.envs).map(([idx, env]) => {
-                    return new Promise((resolve, reject) => {
-                        const validFields = (env.name.trim().length > 0 && env.url.trim().length > 0);
-                        if (validFields) {
-                            resolve()
-                        } else {
-                            reject();
-                        }
-                    });
-                }))
-                    .then(() => resolve())
-                    .catch(() => reject());
-            }
-        });
+    onValidationChange(isValid) {
+        console.log('sitename input is valid', isValid);
     }
 
     render(props, {envs}) {
@@ -82,14 +53,14 @@ export class NewSiteForm extends Component {
                            title={'Site name'}
                            name={'siteName'}
                            value={this.state['siteName']}
-                           handleChange={e => this.handleInputChange(e)}
+                           onValidationChange={this.onValidationChange}
                            required />
                 </div>
                 <h3>Environments</h3>
                 {envs.map((env, index) => {
                     const envNumber = index + 1;
                     return (
-                        <Environment key={index} onInvalid={this.onInvalid} onValid={this.onValid} env={envNumber} />
+                        <Environment key={index} onValidationChange={this.onValidationChange} env={envNumber} />
                     )
                 })}
                 <div class="add-environment">

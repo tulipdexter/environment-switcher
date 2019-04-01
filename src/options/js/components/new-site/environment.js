@@ -5,31 +5,24 @@ import './new-site.css';
 export class Environment extends Component {
     constructor(props) {
         super(props);
+        this.onValidationChange = this.onValidationChange.bind(this);
 
-        // Note, need the name: false and the message: null
-        // because it could remain invalid but have a different message
         this.state = {
             name: null,
             url: null,
-            validation: {
-                name: {
-                    isValid: false,
-                    message: null
-                },
-                url: {
-                    isValid: false,
-                    message: null
-                }
-            }
+            valid: false
         }
     }
 
     // TODO:
     onValidationChange(isValid) {
-        console.log(isValid);
+        // if isValid !== this.state.valid, call the parent cb
+        // Todo: Set the state of valid when it changes (like input)
+        console.log(isValid, this.state.valid);
+        // console.log(isValid === this.state.valid);
     }
 
-    render(props, {name, url, validation}) {
+    render(props, {name, url, valid}) {
         return (
             <fieldset>
                 <div className="environment">
