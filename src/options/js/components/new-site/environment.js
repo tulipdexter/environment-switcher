@@ -19,6 +19,8 @@ export class Environment extends Component {
         // if isValid !== this.state.valid, call the parent cb
         // Todo: Set the state of valid when it changes (like input)
         console.log(isValid, this.state.valid);
+
+        //props.onValidationChange()
         // console.log(isValid === this.state.valid);
     }
 

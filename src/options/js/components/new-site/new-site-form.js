@@ -15,12 +15,8 @@ export class NewSiteForm extends Component {
             siteName: '',
             envs: [],
             submitted: false,
-            validation: {
-                siteName: {
-                    isValid: false,
-                    message: null
-                }
-            }
+            fieldsValid: [],
+            formValid: false
         };
 
         // Setup initial envs
