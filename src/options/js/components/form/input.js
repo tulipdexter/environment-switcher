@@ -1,20 +1,21 @@
 import {h, render, Component} from 'preact';
-import './form.css';
 
 export class Input extends Component {
     constructor(props) {
         super(props);
         this.toggleFocus = this.toggleFocus.bind(this);
 
+        this.input = null;
+        this.setInputRef = element => {
+            this.input = element;
+        };
+
         this.state = {
             hasFocus: false,
             value: null,
-            isValid: false,
-            message: null
-        };
-
-        this.validationMessages = {
-            required: 'Required'
+            valid: false,
+            valueMissing: false,
+            invalidMessage: null
         };
     }
 
@@ -24,30 +25,36 @@ export class Input extends Component {
         }));
     }
 
-    validate(value) {
-        let isValid;
-        // TODO: Messages
+    setInvalidMessage() {
         let message;
 
-        if (!value || value.trim().length === 0) {
-            isValid = false;
-            message = this.validationMessages.required;
-        } else {
-            isValid = true;
+        switch (this.input.type) {
+            case 'url':
+                message = 'Invalid URL';
+                break;
         }
 
-        if (isValid !== this.state.isValid) {
-            this.setState(prevState => ({
-                isValid: !prevState.isValid
-            }), this.props.onValidationChange(isValid));
-        }
+        return message;
+    }
+
+    componentDidMount() {
+        this.setState({
+            valid: this.input.validity.valid,
+            valueMissing: this.input.validity.valueMissing,
+            invalidMessage: this.setInvalidMessage()
+        });
     }
 
     handleInputChange(e) {
-        const {value} = e.target;
-        this.setState({value: value}, () => {
-            if (this.props.required) {
-                this.validate(value);
+        const target = e.target;
+        const {value} = target;
+        this.setState({
+            value: value,
+            valid: target.validity.valid,
+            valueMissing: target.validity.valueMissing
+        }, () => {
+            if (this.state.valid) {
+                this.props.onValid(target);
             }
         });
     }
@@ -64,11 +71,13 @@ export class Input extends Component {
                     required={props.required}
                     placeholder={props.placeholder}
                     value={value}
+                    ref={this.setInputRef}
                     onFocus={this.toggleFocus}
                     onBlur={this.toggleFocus}
                     onChange={e => this.handleInputChange(e)}
                 />
-                {!this.state.valid && this.state.message && <span>{this.state.message}</span>}
+                {(!this.state.valid && this.state.valueMissing) && <span class="form-field__helper" aria-live="polite">Required</span>}
+                {(!this.state.valid && this.state.value) && <span class="form-field__helper form-field__helper--error">{this.state.invalidMessage}</span>}
             </div>
         )
     }

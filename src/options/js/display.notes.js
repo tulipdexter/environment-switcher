@@ -1,7 +1,7 @@
 class DisplayNotes extends Component {
 
     constructor(props) {
-        super(probs);
+        super(props);
 
         this.state = {
             loading: true

@@ -5,24 +5,19 @@ import './new-site.css';
 export class Environment extends Component {
     constructor(props) {
         super(props);
-        this.onValidationChange = this.onValidationChange.bind(this);
+        this.onValid = this.onValid.bind(this);
 
         this.state = {
             name: null,
-            url: null,
-            valid: false
+            url: null
         }
     }
 
-    // TODO:
-    onValidationChange(isValid) {
-        // if isValid !== this.state.valid, call the parent cb
-        // Todo: Set the state of valid when it changes (like input)
-        console.log(isValid, this.state.valid);
-        // console.log(isValid === this.state.valid);
+    onValid(input) {
+        this.props.onValid(input, this.props.index);
     }
 
-    render(props, {name, url, valid}) {
+    render(props, {name, url}) {
         return (
             <fieldset>
                 <div className="environment">
@@ -33,14 +28,14 @@ export class Environment extends Component {
                             <Input type={'text'}
                                    title={'Name'}
                                    name={'name'}
-                                   required
-                                   onValidationChange={this.onValidationChange} />
+                                   onValid={this.onValid}
+                                   required />
                             {/* Url of the environment */}
-                            <Input type={'text'}
+                            <Input type={'url'}
                                    title={'Url'}
                                    name={'url'}
-                                   required
-                                   onValidationChange={this.onValidationChange} />
+                                   onValid={this.onValid}
+                                   required />
                         </div>
                     </div>
                 </div>

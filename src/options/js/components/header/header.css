@@ -1,6 +1,6 @@
 .header {
-	padding: 1rem 2rem;
-	background-color: white;
+	padding: 1.5rem 2rem;
+	background-color: var(--prestige-blue);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -8,19 +8,23 @@
 }
 
 .header__title {
-	font-size: 1.6rem;
-	font-weight: normal;
-	color: var(--bay-wharf);
-	margin-bottom: 0;
-}
-
-.header__brand {
-	display: flex;
-	align-items: center;
+	font-size: 1.8rem;
+	margin-left: 1rem;
+	color: white;
 }
 
 .header__strap {
-	font-size: 2rem;
-	font-weight: bold;
-	margin-left: 1rem;
+	text-transform: uppercase;
+	font-size: 1.4rem;
+	padding-left: 1.5rem;
+	margin-left: 1.5rem;
+	border-left: 1px solid var(--bay-wharf);
+	color: var(--twinkle-blue);
+}
+
+.header__subtitle {
+	font-size: 1.6rem;
+	font-weight: normal;
+	color: var(--twinkle-blue);
+	margin-bottom: 0;
 }

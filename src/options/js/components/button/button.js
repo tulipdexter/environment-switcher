@@ -30,7 +30,7 @@ export class Button extends Component {
     }
 
     static setSize(key) {
-        console.log(key);
+        // console.log(key);
         const validSize = size.hasOwnProperty(key);
         return validSize ? size[key] : size['default'];
     }

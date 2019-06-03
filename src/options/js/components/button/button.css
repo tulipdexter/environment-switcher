@@ -39,3 +39,7 @@
 .button--link:focus {
 	box-shadow: none;
 }
+
+.button:disabled {
+	opacity: 0.3;
+}

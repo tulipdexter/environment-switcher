@@ -41,6 +41,15 @@
 	border-color: var(--clear-chill);
 }
 
+.form-field__helper {
+	font-size: 1.2rem;
+	color: var(--peace);
+}
+
+.form-field__helper--error {
+	color: var(--watermelon);
+}
+
 .form-group .form-field:first-child {
 	margin-bottom: -1px;
 	border-bottom-left-radius: 0;
