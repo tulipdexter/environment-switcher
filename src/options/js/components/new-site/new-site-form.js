@@ -9,28 +9,27 @@ export class NewSiteForm extends Component {
     constructor(props) {
         super(props);
         this.createEnvironment = this.createEnvironment.bind(this);
+        this.validateSiteName = this.validateSiteName.bind(this);
+        this.validateForm = this.validateForm.bind(this);
         this.handleAddEnvironment = this.handleAddEnvironment.bind(this);
-        this.handleValidSiteName = this.handleValidSiteName.bind(this);
-        this.handleValidEnvironment = this.handleValidEnvironment.bind(this);
-        this.setFormRef = this.setFormRef.bind(this);
+        this.handleSiteName = this.handleSiteName.bind(this);
+        this.handleEnvironment = this.handleEnvironment.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
 
         this.form = null;
         this.minEnvs = 2;
 
         this.state = {
-            siteName: '',
+            siteName: null,
             envs: [],
-            formValid: false
+            formValidity: false
         };
 
-        // Setup initial envs
+        // Setup initial envs - should not be in the constructor
+        // Should be an init or setup function that is called somewhere higher?
         for (let i = 0; i < this.minEnvs; i++) {
             this.createEnvironment();
         }
-    }
-
-    setFormRef(ref) {
-        this.form = ref;
     }
 
     createEnvironment() {
@@ -41,34 +40,48 @@ export class NewSiteForm extends Component {
     };
 
     validateForm() {
-        console.log('validate form');
-        console.log(this.form);
         const validity = this.form.checkValidity();
-        console.log(validity);
-        console.log(this.state.formValid);
-        if (validity !== this.state.formValid) {
+
+        if (validity !== this.state.formValidity) {
             this.setState({
-                formValid: validity
+                formValidity: validity
             }, () => {
-                this.props.onValidityChange();
+                if (validity) {
+                    this.props.onValid();
+                } else {
+                    this.props.onInvalid();
+                }
             });
         }
     }
 
-    handleValidSiteName(element) {
+    validateSiteName(value) {
+        let customValidity = '';
+        for (const site of this.props.sites) {
+            if (site.siteName === value) {
+                customValidity = 'Silly sausage, sitename already exists';
+                break;
+            }
+        }
+
+        return customValidity;
+    }
+
+    handleSiteName(element) {
         const {value} = element;
 
         if (value !== this.state.siteName) {
             this.setState({
                 siteName: value
-            })
-        }
+            });
 
-        this.validateForm();
+            this.validateForm();
+        }
     }
 
-    handleValidEnvironment(element, idx) {
-        const {name, value} = element;
+    handleEnvironment(input, idx) {
+        console.log(input, idx);
+        const {name, value} = input;
         const envs = [...this.state.envs];
 
         envs[idx] = {
@@ -77,17 +90,14 @@ export class NewSiteForm extends Component {
         };
 
         this.setState({ envs });
-
-        this.validateForm();
     }
 
     handleAddEnvironment() {
-        console.log('handle add');
-        if (this.state.formValid) {
+        if (this.state.formValidity) {
             this.setState({
-                formValid: false
+                formValidity: false
             }, () => {
-                this.props.onValidityChange();
+                this.props.onInvalid();
                 this.createEnvironment();
             });
         }
@@ -95,26 +105,57 @@ export class NewSiteForm extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log('handle submit', e.target);
+        this.validateSiteName();
+
+        const site = {
+            siteName: this.state.siteName,
+            envs: this.state.envs
+        };
+
+        this.props.handleSave(site);
     }
 
-    render(props, {envs}) {
+    validateEnvironment() {
+        // TODO: Will check that environment of same name or with same url doesn't already exist
+    }
+
+    // Each input has an optional custom validation
+    // If html5 validation all passes && customValidation passes
+    // If that is all truthy, and if the validity is different to previous,
+    // call the notify validity change
+
+    render(props, {envs, submitErrors}) {
         return (
-            <Form onSubmit={this.handleSubmit} setFormRef={this.setFormRef}>
+            <Form onSubmit={this.handleSubmit} ref={form => this.form = form}>
                 <div class="mb-3">
                     {/* Name of the site */}
                     <Input type={'text'}
-                           title={'Site name'}
+                           label={'Site name'}
                            name={'siteName'}
-                           value={this.state['siteName']}
-                           onValid={this.handleValidSiteName}
+                           customValidity={this.validateSiteName}
+                           // onValid={this.handleSiteName}
+                           onValidityChange={this.validateForm}
                            required />
                 </div>
                 <h3>Environments</h3>
                 {envs.map((env, index) => {
-                    const envNumber = index + 1;
                     return (
-                        <Environment key={index} index={index} env={envNumber} onValid={this.handleValidEnvironment} />
+                        <Environment id={index + 1}>
+                            <Input type={'text'}
+                                   label={'Name'}
+                                   name={'name'}
+                                   customValidity={this.validateEnvironment}
+                                   // onValid={input => this.handleEnvironment(input, index)}
+                                   onValidityChange={this.validateForm}
+                                   required />
+                            <Input type={'url'}
+                                   label={'Url'}
+                                   name={'url'}
+                                   customValidity={this.validateEnvironment}
+                                   // onValid={input => this.handleEnvironment(input, index)}
+                                   onValidityChange={this.validateForm}
+                                   required />
+                        </Environment>
                     )
                 })}
                 <div class="add-environment">

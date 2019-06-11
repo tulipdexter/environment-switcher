@@ -6,6 +6,7 @@
   "author": "David Paul <david.paul@springernature.com>",
   "license": "MIT",
   "scripts": {
+    "watch": "parcel watch ./src/options/index.html --out-dir ./dist/options --public-url /dist/options",
     "dev": "parcel ./src/options/index.html --out-dir ./dist/options --public-url /dist/options",
     "build": "parcel build ./src/options/index.html --out-dir ./dist/options --public-url /dist/options"
   },

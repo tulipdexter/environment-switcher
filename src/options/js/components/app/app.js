@@ -11,7 +11,7 @@ export class App extends Component {
         super();
 
         this.toggleState = this.toggleState.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSave = this.handleSave.bind(this);
         this.clearStorage = this.clearStorage.bind(this);
 
         this.state = {
@@ -30,29 +30,29 @@ export class App extends Component {
     }
 
     toggleState(key) {
-        console.log('toggle');
         this.setState(prevState => ({
             [key]: !prevState[key]
         }));
     };
 
-    handleSubmit(e, siteObject) {
-        // TODO proptypes for siteObject
-        e.preventDefault();
-        // console.log(siteObject);
-
+    handleSave(site) {
         // Set saving to true; (or loading?)
         // if it's saving, disable the save and cancel buttons
         // set the chrome storage and in the callback set the state of sites AND saving.
-        const updatedSites = [...this.state.sites, siteObject];
+        const updatedSites = [...this.state.sites, site];
         this.toggleState('saving');
 
-        chrome.storage.sync.set({'sites': updatedSites}, () => {
-            this.setState({sites: updatedSites}, () => {
+        // console.log(updatedSites);
 
-            });
-            this.toggleState('showModal');
+        chrome.storage.sync.set({'sites': updatedSites}, () => {
             this.toggleState('saving');
+
+            this.setState({
+                sites: updatedSites
+            }, () => {
+                this.toggleState('showModal');
+                this.toggleState('saving');
+            });
         });
     }
 
@@ -70,6 +70,7 @@ export class App extends Component {
         });
     }
 
+    // NEED TO FIND A WAY TO RERUN THE FORM VALIDATION IF THE INPUT CHANGES AND PASS IT ALL THE WAY BACK UP
     render(props, {loaded, showModal, sites}) {
         if (!loaded) {
             // TODO: Spinner of some sort
@@ -91,7 +92,10 @@ export class App extends Component {
                             <Modal show={showModal}
                                    onCancel={() => this.toggleState('showModal')}
                                    header={"Add New Site"}>
-                                <NewSiteForm onValidityChange={() => this.toggleState('buttonDisabled')}>
+                                <NewSiteForm onValid={() => this.setState({buttonDisabled: false})}
+                                             onInvalid={() => this.setState({buttonDisabled: true})}
+                                             sites={sites}
+                                             handleSave={this.handleSave}>
                                     <ModalActions>
                                         <Button variant={variant.default}
                                                 onClick={() => this.toggleState('showModal')}

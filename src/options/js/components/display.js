@@ -9,7 +9,7 @@ export class Display extends Component {
             return (
                 <ul>
                     {props.sites.map(site => {
-                        console.log(site);
+                        // console.log(site);
                         return (
                             <li>
                                 <p>{site.siteName}</p>

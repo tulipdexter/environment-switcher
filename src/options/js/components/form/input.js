@@ -1,31 +1,30 @@
 import {h, render, Component} from 'preact';
+import {Formfield} from "./form-field";
 
-export class Input extends Component {
+class Input extends Component {
     constructor(props) {
         super(props);
         this.toggleFocus = this.toggleFocus.bind(this);
-
-        this.input = null;
-        this.setInputRef = element => {
-            this.input = element;
-        };
+        this.handleChange = this.handleChange.bind(this);
 
         this.state = {
-            hasFocus: false,
             value: null,
-            valid: false,
-            valueMissing: false,
-            invalidMessage: null
+            hasFocus: false,
+            isValid: false,
+            isEmpty: false,
+            customValidity: ''
         };
     }
 
     toggleFocus() {
-        this.setState(prevState => ({
-            hasFocus: !prevState.hasFocus
+        const hasFocus = !this.state.hasFocus;
+
+        this.setState(() => ({
+            hasFocus: hasFocus
         }));
     }
 
-    setInvalidMessage() {
+    setErrorMessage() {
         let message;
 
         switch (this.input.type) {
@@ -37,48 +36,106 @@ export class Input extends Component {
         return message;
     }
 
+    validate(value) {
+        const isEmpty = this.input.validity.valueMissing;
+
+        if (isEmpty && (isEmpty !== this.state.isEmpty)) {
+            this.setState({
+                isEmpty: isEmpty
+            });
+        } else {
+            if (this.props.customValidity) {
+                const customValidity = this.props.customValidity(value);
+
+                if (customValidity !== this.state.customValidity) {
+                    this.setState({
+                        customValidity: customValidity
+                    }, () => {
+                        this.input.setCustomValidity(this.state.customValidity);
+                    })
+                }
+            }
+            const isValid = this.input.validity.valid;
+
+            if (isValid !== this.state.isValid) {
+                this.setState({
+                    isValid: isValid
+                })
+            }
+        }
+    }
+
+    // validate(value) {
+    //     // Custom validation to be done in here
+    //     // this.props.customValidity
+    //     const isHtml5Valid = this.input.validity.valid;
+    //     const isHtml5Empty = this.input.validity.valueMissing;
+    //
+    //     if (this.state.isEmpty !== isHtml5Empty) {
+    //         this.setState({
+    //             isEmpty: isHtml5Empty
+    //         })
+    //     }
+    //
+    //     // Validate against HTML5
+    //     // If it's inValid and different to state, setState.
+    //     // If it's Valid, check the custom validity.
+    //
+    //     // html5 invalid, no need to do custom
+    //     if (!isHtml5Valid && (isHtml5Valid !== this.state.isValid)) {
+    //         this.setState({
+    //             isValid: isHtml5Valid
+    //         })
+    //     } else {
+    //         const isCustomValid = this.props.customValidity(value);
+    //
+    //         if (!isCustomValid && (isCustomValid !== this.state.isValid)) {
+    //             this.setState({
+    //                 isValid: isCustomValid
+    //             })
+    //         }
+    //     }
+    // }
+
+    handleChange(e) {
+        const target = e.target;
+
+        if (this.state.value !== target.value) {
+            this.setState({
+                value: target.value
+            }, () => {
+                this.validate(target.value);
+            });
+        }
+    }
+
     componentDidMount() {
         this.setState({
-            valid: this.input.validity.valid,
-            valueMissing: this.input.validity.valueMissing,
-            invalidMessage: this.setInvalidMessage()
-        });
+            isValid: this.input.validity.valid,
+            isEmpty: this.input.validity.valueMissing
+        })
     }
 
-    handleInputChange(e) {
-        const target = e.target;
-        const {value} = target;
-        this.setState({
-            value: value,
-            valid: target.validity.valid,
-            valueMissing: target.validity.valueMissing
-        }, () => {
-            if (this.state.valid) {
-                this.props.onValid(target);
-            }
-        });
-    }
-
-    render(props, {hasFocus, value}) {
+    render(props, {hasFocus, value, isValid, isEmpty, customValidity}) {
         return (
-            <div class={"form-field" + (hasFocus ? " has-focus" : "")}>
-                <label htmlFor={props.name} class="form-field__label">{props.title}</label>
-                <input
-                    class="form-field__input"
-                    id={props.name}
-                    name={props.name}
-                    type={props.type}
-                    required={props.required}
-                    placeholder={props.placeholder}
-                    value={value}
-                    ref={this.setInputRef}
-                    onFocus={this.toggleFocus}
-                    onBlur={this.toggleFocus}
-                    onChange={e => this.handleInputChange(e)}
-                />
-                {(!this.state.valid && this.state.valueMissing) && <span class="form-field__helper" aria-live="polite">Required</span>}
-                {(!this.state.valid && this.state.value) && <span class="form-field__helper form-field__helper--error">{this.state.invalidMessage}</span>}
-            </div>
-        )
+            <Formfield label={props.label}
+                       for={props.name}
+                       hasFocus={hasFocus}
+                       isValid={isValid}
+                       isEmpty={isEmpty}
+                       customValidity={customValidity}>
+                <input type={props.type}
+                       name={props.name}
+                       class="form-field__input"
+                       value={value}
+                       required={props.required}
+                       ref={input => this.input = input}
+                       onFocus={this.toggleFocus}
+                       onBlur={this.toggleFocus}
+                       onChange={e => this.handleChange(e)} />
+            </Formfield>
+        );
     }
 }
+
+export {Input};
