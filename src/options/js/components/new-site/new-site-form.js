@@ -10,13 +10,13 @@ export class NewSiteForm extends Component {
         super(props);
         this.createEnvironment = this.createEnvironment.bind(this);
         this.validateSiteName = this.validateSiteName.bind(this);
+        this.validateEnvironment = this.validateEnvironment.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.handleAddEnvironment = this.handleAddEnvironment.bind(this);
         this.handleSiteName = this.handleSiteName.bind(this);
         this.handleEnvironment = this.handleEnvironment.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
-        this.form = null;
         this.minEnvs = 2;
 
         this.state = {
@@ -24,12 +24,6 @@ export class NewSiteForm extends Component {
             envs: [],
             formValidity: false
         };
-
-        // Setup initial envs - should not be in the constructor
-        // Should be an init or setup function that is called somewhere higher?
-        for (let i = 0; i < this.minEnvs; i++) {
-            this.createEnvironment();
-        }
     }
 
     createEnvironment() {
@@ -39,7 +33,12 @@ export class NewSiteForm extends Component {
         });
     };
 
+    /**
+     * Validation
+     */
+
     validateForm() {
+        console.log(this.form);
         const validity = this.form.checkValidity();
 
         if (validity !== this.state.formValidity) {
@@ -59,7 +58,7 @@ export class NewSiteForm extends Component {
         let customValidity = '';
         for (const site of this.props.sites) {
             if (site.siteName === value) {
-                customValidity = 'Silly sausage, sitename already exists';
+                customValidity = 'Site exists';
                 break;
             }
         }
@@ -67,8 +66,21 @@ export class NewSiteForm extends Component {
         return customValidity;
     }
 
-    handleSiteName(element) {
-        const {value} = element;
+    validateEnvironment(value) {
+        let customValidity = '';
+
+        for (let i = 0; i < this.state.envs.length; i++) {
+            if (this.state.envs[i].name === value) {
+                customValidity = "Environment exists";
+                break
+            }
+        }
+
+        return customValidity;
+    }
+
+    handleSiteName(input) {
+        const value = input.value;
 
         if (value !== this.state.siteName) {
             this.setState({
@@ -79,17 +91,18 @@ export class NewSiteForm extends Component {
         }
     }
 
-    handleEnvironment(input, idx) {
-        console.log(input, idx);
+    handleEnvironment(input, index) {
         const {name, value} = input;
         const envs = [...this.state.envs];
 
-        envs[idx] = {
-            ...envs[idx],
+        envs[index] = {
+            ...envs[index],
             [name]: value
         };
 
         this.setState({ envs });
+
+        this.validateForm();
     }
 
     handleAddEnvironment() {
@@ -115,16 +128,18 @@ export class NewSiteForm extends Component {
         this.props.handleSave(site);
     }
 
-    validateEnvironment() {
-        // TODO: Will check that environment of same name or with same url doesn't already exist
+    componentDidMount() {
+        // Setup initial envs - should not be in the constructor
+        // Should be an init or setup function that is called somewhere higher?
+        for (let i = 0; i < this.minEnvs; i++) {
+            this.createEnvironment();
+        }
     }
 
-    // Each input has an optional custom validation
-    // If html5 validation all passes && customValidation passes
-    // If that is all truthy, and if the validity is different to previous,
-    // call the notify validity change
-
     render(props, {envs, submitErrors}) {
+        // shouldValidate={this.state.something}
+        // onValid=bla
+        // Inside the form component, if shouldValidate is true, it will validate the form
         return (
             <Form onSubmit={this.handleSubmit} ref={form => this.form = form}>
                 <div class="mb-3">
@@ -133,27 +148,28 @@ export class NewSiteForm extends Component {
                            label={'Site name'}
                            name={'siteName'}
                            customValidity={this.validateSiteName}
-                           // onValid={this.handleSiteName}
-                           onValidityChange={this.validateForm}
+                           onChange={this.handleSiteName}
                            required />
                 </div>
                 <h3>Environments</h3>
                 {envs.map((env, index) => {
+                    // TODO: Dynamic ref
                     return (
-                        <Environment id={index + 1}>
+                        <Environment id={index + 1} index={index}>
+                            {/*The index needs to be sent to the input and back into the handler*/}
                             <Input type={'text'}
                                    label={'Name'}
                                    name={'name'}
+                                   index={index}
                                    customValidity={this.validateEnvironment}
-                                   // onValid={input => this.handleEnvironment(input, index)}
-                                   onValidityChange={this.validateForm}
+                                   onChange={(value) => this.handleEnvironment(value, index)}
                                    required />
                             <Input type={'url'}
                                    label={'Url'}
                                    name={'url'}
+                                   index={index}
                                    customValidity={this.validateEnvironment}
-                                   // onValid={input => this.handleEnvironment(input, index)}
-                                   onValidityChange={this.validateForm}
+                                   onChange={this.handleEnvironment}
                                    required />
                         </Environment>
                     )

@@ -1,34 +1,51 @@
 import {h, render, Component} from 'preact';
 import './modal.css';
 
-export class ModalActions extends Component {
-    render(props) {
-        return (
-            <footer className="modal__footer">
-                {props.children}
-                {props.actions ? props.actions : ''}
-            </footer>
-        )
-    }
-}
-
-export class Modal extends Component {
-    render(props) {
-        if (!props.show) {
-            return null;
+class Modal extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false
         }
+    }
 
-        // TODO, event listener on escape
+    open() {
+        this.setState({
+            open: true
+        })
+    }
+
+    close() {
+        this.setState({
+            open: false
+        }, () => {
+            this.props.onClose();
+        });
+    }
+
+    componentDidMount() {
+        this.open();
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                this.close();
+            }
+        });
+    }
+
+    render(props, {open}, context) {
+        const {render} = props;
         return (
-            <div class="modal">
-                <div class="modal__backdrop">
-                    <div class="modal__dialog">
-                        <h4 class="modal__header">{props.header}</h4>
-                        {props.children}
-                        {props.actions ? <ModalActions actions={props.actions}/> : ''}
-                    </div>
+            <div>
+            {open &&
+                <div class="modal">
+                    {/* passing the close function to the render function as parameters */}
+                    {/* it's the parents job to close the modal, whenever it needs */}
+                    {render({close: this.close.bind(this)})}
                 </div>
+            }
             </div>
         )
     }
 }
+
+export {Modal};

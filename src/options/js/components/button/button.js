@@ -36,6 +36,7 @@ export class Button extends Component {
     }
 
     render(props) {
+        console.log(props.disabled);
         return (
             <button class={`button button--${Button.setVariant(props.variant)} button--${Button.setSize(props.size)}`}
                     type={props.type}

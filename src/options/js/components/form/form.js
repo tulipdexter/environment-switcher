@@ -10,19 +10,18 @@ export class Form extends Component {
     // When one changes we revalidate the form
     // Any inputs that have an onValid on them are custom callbacks for extra functionality
 
-    /**
-     * this.state = {
-     *     [valid, valid, invalid, invalid etc]
-     * }
-     */
-
     // Want to have the validateForm in here
     // And then
 
-    render(props) {
+    validate() {
+        return this.form.checkValidity();
+    }
+
+    render(props, state, context) {
+        const {render} = props;
         return (
-            <form onSubmit={e => this.props.onSubmit(e)} ref={props.setFormRef} noValidate>
-                {props.children}
+            <form onSubmit={e => this.props.onSubmit(e)} ref={form => this.form = form} noValidate>
+                {render({validateForm: this.validate.bind(this)})}
             </form>
         )
     }
