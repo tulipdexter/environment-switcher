@@ -8,9 +8,32 @@ class App extends Component {
     constructor(props) {
         super(props);
 
+        this.handleNewSite = this.handleNewSite.bind(this);
+
         this.state = {
+            sites: [],
+            saving: false,
             addingSite: false
         }
+    }
+
+    handleNewSite(site) {
+        // Set saving to true; (or loading?)
+        // if it's saving, disable the save and cancel buttons
+        // set the chrome storage and in the callback set the state of sites AND saving.
+        const updatedSites = [...this.state.sites, site];
+        this.setState({
+            saving: true
+        });
+
+        // console.log(updatedSites);
+
+        chrome.storage.sync.set({'sites': updatedSites}, () => {
+            this.setState({
+                sites: updatedSites,
+                saving: false
+            });
+        });
     }
 
     render(props, {addingSite}, context) {
@@ -28,7 +51,7 @@ class App extends Component {
                 </div>
                 {addingSite &&
                 //    on cancel and on save
-                <NewSite onCancel={() => this.setState({addingSite: false})}/>}
+                <NewSite onCancel={() => this.setState({addingSite: false})} handleSave={this.handleNewSite}/>}
             </div>
         )
     }

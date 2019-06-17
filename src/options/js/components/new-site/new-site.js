@@ -17,7 +17,8 @@ class NewSite extends Component {
         this.state = {
             siteName: null,
             envs: [],
-            disableSave: true
+            disableSave: true,
+            disableAddEnv: true
         };
     }
 
@@ -28,6 +29,17 @@ class NewSite extends Component {
         });
     };
 
+    handleSave(e) {
+        // e.preventDefault(); THIS CAUSING MODAL TO NOT CLOSE
+
+        const site = {
+            siteName: this.state.siteName,
+            envs: this.state.envs
+        };
+
+        this.props.handleSave(site);
+    }
+
     handleSiteNameChange(input, validateForm) {
         const {value} = input;
 
@@ -36,10 +48,10 @@ class NewSite extends Component {
                 siteName: value
             });
 
-            // TODO: Candidate for abstraction into own function
             const formValidity = validateForm();
-            if (formValidity) this.setState({
-                disableSave: false
+            this.setState({
+                disableSave: !formValidity,
+                disableAddEnv: !formValidity
             });
         }
     }
@@ -55,22 +67,21 @@ class NewSite extends Component {
             }
         });
 
-        // TODO: Candidate for abstraction into own function
         const formValidity = validateForm();
-        if (formValidity) this.setState({
-            disableSave: false
+        this.setState({
+            disableSave: !formValidity,
+            disableAddEnv: !formValidity
         });
     }
 
     handleAddEnvironment() {
         this.createEnvironment();
-        // if (this.state.formValid) {
-        //     this.setState({
-        //         formValid: false
-        //     }, () => {
-        //         this.props.onInvalid();
-        //     });
-        // }
+        if (!this.state.disableSave) {
+            this.setState({
+                disableSave: true,
+                disableAddEnv: true
+            });
+        }
     }
 
     setUpInitialEnvironments() {
@@ -83,13 +94,11 @@ class NewSite extends Component {
         this.setUpInitialEnvironments();
     }
 
-    // Every time and input changes to valid
-    // You need to validate the form
-    // If input changes and becomes invalid, you can set form validity to invalid
-
     // TODO: Document why render props are being used
+    // -- Because we can get the validateForm function as a parameter here
+    // -- which means less messy callback code and more isolation of modules
 
-    render(props, {envs, disableSave}, context) {
+    render(props, {envs, disableSave, disableAddEnv}, context) {
         return (
             <Modal
                 onClose={() => props.onCancel()}
@@ -99,6 +108,7 @@ class NewSite extends Component {
                             <div className="modal__dialog">
                                 <h4 className="modal__header">Add New Site</h4>
                                 <Form
+                                    onSubmit={e => this.handleSave(e)}
                                     render={({validateForm}) => {
                                         return (
                                             <div>
@@ -132,7 +142,7 @@ class NewSite extends Component {
                                                 ))}
                                                 <div className="add-environment">
                                                     <Button variant={variant.link} onClick={this.handleAddEnvironment.bind(this)}
-                                                            type="button">Add Environment</Button>
+                                                            type="button" disabled={disableAddEnv}>Add Environment</Button>
                                                 </div>
                                                 <div className="modal__footer">
                                                     <Button onClick={() => close()}>Cancel</Button>
