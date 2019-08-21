@@ -30,13 +30,11 @@ export class Button extends Component {
     }
 
     static setSize(key) {
-        // console.log(key);
         const validSize = size.hasOwnProperty(key);
         return validSize ? size[key] : size['default'];
     }
 
     render(props) {
-        console.log(props.disabled);
         return (
             <button class={`button button--${Button.setVariant(props.variant)} button--${Button.setSize(props.size)}`}
                     type={props.type}

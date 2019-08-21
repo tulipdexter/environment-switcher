@@ -36,7 +36,7 @@ class Input extends Component {
 
         this.setState({
             errorMessage: message
-        })
+        });
     }
 
     validate(value) {
@@ -58,6 +58,7 @@ class Input extends Component {
         if (!isValid) this.setErrorMessage();
 
         if (this.props.customValidity) {
+            // This must be a function because we need to know which input is calling it.
             const customValidity = this.props.customValidity(value);
 
             if (customValidity !== this.state.customValidity) {
@@ -73,7 +74,7 @@ class Input extends Component {
                             isValid: isValid
                         })
                     }
-                })
+                });
             }
         }
     }
@@ -85,15 +86,8 @@ class Input extends Component {
             this.setState({
                 value: target.value
             }, () => {
+                this.props.onChange(target);
                 this.validate(target.value);
-
-                // TODO: props.index is purely for environment
-                // Want to move it out of this generic input component
-                if (this.props.index || this.props.index === 0) { // 0 is falsy
-                    this.props.onChange(target, this.props.index);
-                } else {
-                    this.props.onChange(target);
-                }
             });
         }
     }
@@ -105,7 +99,7 @@ class Input extends Component {
         })
     }
 
-    render(props, {hasFocus, value, isValid, isEmpty, customValidity, errorMessage}, context) {
+    render(props, {hasFocus, value, isValid, isEmpty, errorMessage, customValidity}, context) {
         return (
             <Formfield
                 label={props.label}

@@ -36,6 +36,7 @@ export class _app extends Component {
     };
 
     handleSave(site) {
+        console.log('hs', site);
         // Set saving to true; (or loading?)
         // if it's saving, disable the save and cancel buttons
         // set the chrome storage and in the callback set the state of sites AND saving.

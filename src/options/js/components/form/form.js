@@ -7,7 +7,9 @@ class Form extends Component {
     }
 
     validate() {
-        return this.form.checkValidity();
+        const valid = this.form.checkValidity();
+        console.log('checkValidity', valid);
+        return valid;
     }
 
     render(props, state, context) {
