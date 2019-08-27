@@ -1,0 +1,46 @@
+.modal {
+    opacity: 0;
+    transition: opacity 0.25s ease-in-out;
+    //overflow: auto;
+
+    &.show {
+        opacity: 1;
+    }
+}
+
+.modal__backdrop {
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.modal__content {
+    border-radius: 1rem;
+    max-width: 640px;
+    margin: 4rem auto;
+    padding: 2rem 3rem;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.5);
+    overflow: hidden;
+}
+
+.modal__header {
+    font-size: 1.8rem;
+    text-align: center;
+    margin: -2rem -3rem 2rem;
+    padding: 2rem 3rem;
+    border-bottom: 1px solid var(--city-lights);
+}
+
+.modal__footer {
+    margin: 2rem -3rem 0;
+    padding: 2rem 3rem 0;
+    border-top: 1px solid var(--city-lights);
+    text-align: right;
+}
+
+.modal__footer > button {
+    margin-left: 1rem;
+}

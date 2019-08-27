@@ -1,0 +1,65 @@
+/**
+ * Palette
+ * Chinese Palette by Wenjun from China
+**/
+
+:root {
+  --lime-soap: #7bed9f;
+  --ufo-green: #2ed573;
+  --clear-chill: #1e90ff;
+  --watermelon: #ff4757;
+  --city-lights: #dfe4ea;
+  --twinkle-blue: #ced6e0;
+  --peace: #a4b0be;
+  --bay-wharf: #747d8c;
+  --prestige-blue: #2f3542;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  font-family: system-ui, sans-serif;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  font-size: 1.6rem;
+  background-color: white;
+  color: var(--prestige-blue);
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+h1, .h1 {
+  font-size: 2.6rem;
+}
+
+h2, .h2 {
+  font-size: 2rem;
+}
+
+h3, .h3 {
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  margin-bottom: 2.5rem;
+}
+
+/*h4, .h4 {*/
+/*text-transform: uppercase;*/
+/*font-size: 1.4rem;*/
+/*margin-bottom: 2.5rem;*/
+/*}*/

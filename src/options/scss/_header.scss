@@ -1,0 +1,27 @@
+.header {
+  padding: 1.5rem 2rem;
+  background-color: var(--prestige-blue);
+  margin-bottom: 4rem;
+}
+
+.header__title {
+  font-size: 1.8rem;
+  margin: 0;
+  color: white;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.header__strap {
+  text-transform: uppercase;
+  font-size: 1.4rem;
+  padding-left: 1.5rem;
+  margin-left: 1.5rem;
+  border-left: 1px solid var(--bay-wharf);
+}
+
+.header__subtitle {
+  font-weight: normal;
+  margin-left: auto;
+}
