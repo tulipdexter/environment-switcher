@@ -1,0 +1,79 @@
+.form-field {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--twinkle-blue);
+    align-items: baseline;
+    position: relative;
+}
+
+//.form-field.has-error {
+//    border-color: var(--watermelon);
+//}
+
+.form-field:last-child {
+    margin-bottom: 0;
+}
+
+.form-field__label,
+.form-field__input {
+    font-size: 1.5rem;
+    padding: 1rem 0;
+    line-height: 1.2; // Cannot be 1, Chrome enforces a miniumum line-height on inputs
+    display: block;
+    width: 100%;
+    cursor: text;
+}
+
+.form-field__label {
+    color: var(--bay-wharf);
+    position: relative;
+    z-index: 1;
+}
+
+//.form-field.has-focus .form-field__label {
+//    color: var(--clear-chill);
+//}
+
+.form-field__input {
+    border: 0;
+    margin: 0;
+    position: absolute;
+    top: 0;
+}
+
+.form-field__input:focus {
+    outline: none;
+    border-color: var(--clear-chill);
+}
+
+.form-field__helper {
+    font-size: 1.2rem;
+    color: var(--peace);
+    margin-left: 1rem;
+}
+
+.form-field__helper--error {
+    color: var(--watermelon);
+}
+
+// --large
+
+.form-field--large {
+    .form-field__label,
+    .form-field__input {
+        font-size: 4rem;
+        font-weight: bold;
+    }
+}
+
+// focus state
+.form-field.value {
+    border-bottom-color: var(--prestige-blue);
+}
+
+.form-field.focus {
+    border-bottom-color: var(--clear-chill);
+}
+
+.form-field.value .form-field__label {
+    z-index: auto;
+}

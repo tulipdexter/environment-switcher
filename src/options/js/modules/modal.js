@@ -1,7 +1,6 @@
-import {awaitElementRender} from "../util/await-element-render";
-
 export const modal = {
-    create: function() {
+    create: function(options) {
+        // modal element
         const modalElement = document.createElement('div');
         modalElement.className = 'modal';
 
@@ -11,26 +10,33 @@ export const modal = {
             }
         });
 
+        // backdrop element
         const backdropElement = document.createElement('div');
         backdropElement.className = 'modal__backdrop';
 
-        backdropElement.addEventListener('click', () => this.remove(modalElement));
+        // close button element
+        const closeButtonElement = document.createElement('button');
+        closeButtonElement.innerHTML = '&times;';
+        closeButtonElement.className = 'modal__close';
+
+        closeButtonElement.addEventListener('click', () => this.remove(modalElement));
+
+        // content element
+        const contentElement = document.createElement('div');
+        contentElement.className = 'modal__content';
+
+        contentElement.appendChild(options.content);
 
         modalElement.appendChild(backdropElement);
-
-        // modalElement.innerHTML = `
-        //     <div class="modal__content">
-        //         <header class="modal__header">${title}</header>
-        //     </div>
-        // `;
-
-        // TODO: create close button with event listener
-        // TODO: add event listener to escape key
+        modalElement.appendChild(closeButtonElement);
+        modalElement.appendChild(contentElement);
 
         document.body.appendChild(modalElement);
+        return modalElement;
+    },
 
-        awaitElementRender(modalElement)
-            .then(() => modalElement.classList.add('show'));
+    show: modal => {
+        modal.classList.add('show');
     },
 
     remove: modal => {

@@ -4,16 +4,17 @@
   border: 1px solid var(--bay-wharf);
   color: var(--bay-wharf);
   transition: background-color .2s ease, box-shadow .25s ease;
+  cursor: pointer;
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 4px var(--lime-soap);
+    box-shadow: 0 0 0 4px var(--clear-chill);
   }
 }
 
 .button--primary {
-  background: var(--clear-chill);
-  border-color: var(--clear-chill);
+  background: var(--prestige-blue);
+  border-color: var(--prestige-blue);
   color: white;
 }
 
