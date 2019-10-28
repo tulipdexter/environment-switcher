@@ -5,10 +5,6 @@
     position: relative;
 }
 
-//.form-field.has-error {
-//    border-color: var(--watermelon);
-//}
-
 .form-field:last-child {
     margin-bottom: 0;
 }
@@ -29,15 +25,12 @@
     z-index: 1;
 }
 
-//.form-field.has-focus .form-field__label {
-//    color: var(--clear-chill);
-//}
-
 .form-field__input {
     border: 0;
     margin: 0;
     position: absolute;
     top: 0;
+    background-color: transparent;
 }
 
 .form-field__input:focus {
@@ -66,14 +59,20 @@
 }
 
 // focus state
-.form-field.value {
-    border-bottom-color: var(--prestige-blue);
-}
-
 .form-field.focus {
     border-bottom-color: var(--clear-chill);
 }
 
+// value state
 .form-field.value .form-field__label {
-    z-index: auto;
+    opacity: 0;
 }
+
+//.form-field.value {
+//    border-bottom-color: var(--ufo-green);
+//}
+
+// error state
+//.form-field.error {
+//    border-color: var(--watermelon);
+//}

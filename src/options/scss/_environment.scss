@@ -1,19 +1,18 @@
 .environment {
-    display: flex;
     margin: 0 0 3rem;
-    align-items: flex-start;
-}
-
-.environment__id {
-    font-size: 2.5rem;
-    flex: 0 0 40px;
-    padding: 0.2rem 1rem 1rem;
-    color: var(--twinkle-blue);
-    text-align: center;
 }
 
 .environment__content {
     padding-left: 1.5rem;
     border-left: 1px solid var(--twinkle-blue);
-    flex: 1;
+}
+
+.environment__header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--prestige-blue);
+    margin-bottom: 1rem;
 }
