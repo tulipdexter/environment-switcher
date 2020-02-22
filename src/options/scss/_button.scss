@@ -1,14 +1,15 @@
 .button {
   font-size: 1.5rem;
-  padding: 1.5em 1.75em;
-  border: 1px solid var(--bay-wharf);
-  color: var(--bay-wharf);
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--clear-chill);
+  border-radius: 3px;
+  color: var(--clear-chill);
   transition: background-color .2s ease, box-shadow .25s ease;
   cursor: pointer;
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 4px var(--clear-chill);
+    box-shadow: 0 0 4px var(--clear-chill);
   }
 }
 
@@ -42,6 +43,7 @@
 
 .button--small {
   font-size: 1.2rem;
+  padding: 0.5rem 0.75rem;
 }
 
 .button--icon {
@@ -49,7 +51,7 @@
   align-items: center;
 
   > svg {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
     fill: currentColor;
   }
 }

@@ -1,5 +1,5 @@
-import {h, render} from 'preact';
-import {App} from './react/components/app/app';
-import './index.css'
+import {getSiteList} from "./modules/site-list";
+import {newSite} from "./modules/new-site";
 
-render(<App />, document.body);
+getSiteList();
+newSite();

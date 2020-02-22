@@ -78,9 +78,20 @@
 
 // Hiding
 
-.hide {
+.hidden {
     display: none;
     visibility: hidden;
+}
+
+.visually-hidden {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: 0 - 100%;
+    overflow: hidden;
+    padding: 0;
+    position: absolute !important;
+    width: 1px;
 }
 
 // Links

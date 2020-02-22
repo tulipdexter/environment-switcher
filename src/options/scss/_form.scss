@@ -1,8 +1,8 @@
 .form-field {
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--twinkle-blue);
+    margin-bottom: 2rem;
+    border: 1px solid var(--city-lights);
+    border-radius: 3px;
     align-items: baseline;
-    position: relative;
 }
 
 .form-field:last-child {
@@ -11,25 +11,25 @@
 
 .form-field__label,
 .form-field__input {
-    font-size: 1.5rem;
-    padding: 1rem 0;
     line-height: 1.2; // Cannot be 1, Chrome enforces a miniumum line-height on inputs
     display: block;
     width: 100%;
-    cursor: text;
 }
 
 .form-field__label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
     color: var(--bay-wharf);
     position: relative;
     z-index: 1;
+    padding: 0.75rem 1rem 0;
 }
 
 .form-field__input {
+    font-size: 1.6rem;
+    padding: 0.75rem 1rem;
     border: 0;
     margin: 0;
-    position: absolute;
-    top: 0;
     background-color: transparent;
 }
 
@@ -48,25 +48,70 @@
     color: var(--watermelon);
 }
 
-// --large
+// --hero
 
-.form-field--large {
+.form-field--hero {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+
     .form-field__label,
+    .form-field__input {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
     .form-field__input {
         font-size: 4rem;
         font-weight: bold;
     }
 }
 
-// focus state
+// Form Groups
+
+.form-group {
+    display: flex;
+    margin-bottom: 2rem;
+
+    .form-field {
+        margin-bottom: 0;
+        flex: 1;
+
+        &:first-child {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        &:last-child {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            margin-left: -1px; // border collapse
+        }
+    }
+}
+
+.form-group--right-bias {
+    .form-field:first-child {
+        max-width: 25%;
+    }
+}
+
+// State
+
 .form-field.focus {
     border-bottom-color: var(--clear-chill);
+    z-index: 1;
+}
+
+.form-field.focus .form-field__label {
+    color: var(--clear-chill);
 }
 
 // value state
-.form-field.value .form-field__label {
-    opacity: 0;
-}
+//.form-field.value .form-field__label {
+//    opacity: 0;
+//}
 
 //.form-field.value {
 //    border-bottom-color: var(--ufo-green);

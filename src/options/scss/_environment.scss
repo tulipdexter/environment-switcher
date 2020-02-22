@@ -1,5 +1,7 @@
 .environment {
-    margin: 0 0 3rem;
+    position: relative;
+    padding-right: 50px;
+    margin-right: -50px;
 }
 
 .environment__content {
@@ -15,4 +17,17 @@
     padding: 0.5rem 0;
     border-bottom: 1px solid var(--prestige-blue);
     margin-bottom: 1rem;
+}
+
+.environment__remove {
+    display: none;
+    position: absolute;
+    right: 0;
+    margin-left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.environment:hover .environment__remove {
+    display: block;
 }

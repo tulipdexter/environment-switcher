@@ -55,7 +55,11 @@ const formField = (label, elementName, id, options) => {
     fieldElement.appendChild(labelElement);
     fieldElement.appendChild(inputElement);
 
-    return fieldElement;
+    // Return an object so that the caller of `formField` can
+    return {
+        field: fieldElement,
+        input: inputElement
+    };
 };
 
 export {formField};

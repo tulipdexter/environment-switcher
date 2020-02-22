@@ -1,4 +1,4 @@
-import {get} from "../util/storage";
+import {storage} from "../util/storage";
 
 const createNoSitesHtml = () => {
     const element = document.createElement('div');
@@ -17,7 +17,7 @@ export const getSiteList = () => {
 
     if (!targetContainerElement) return;
 
-    get('sites')
+    storage.get('sites')
         .then(data => {
             if (data.length) {
                 console.log(data);

@@ -1,7 +1,10 @@
-import {modal} from "./modal";
-import {awaitElementRender} from "../util/await-element-render";
+import {autofocus} from "./autofocus";
+import {customEvents} from "../util/custom-events";
 import {formField} from "./form";
 import {icons} from "./icons";
+import {modal} from "./modal";
+import {awaitElementRender} from "../util";
+import {rerender} from "preact";
 
 // When you click edit, re-fetch the information
 // from the storage but only get that site name.
@@ -12,47 +15,67 @@ import {icons} from "./icons";
 // When save, need to put something to storage.
 // TODO: Before any updateEnvironments is called, make sure the value of the inputs is added
 // to this object.
-const site = {};
-
-const events = {
-    updateEnvs: 'update.envs'
+const siteState = {
+    name: '',
+    environments: []
 };
+
+// Should ONLY rerender the whole environments list _if_ the number of items has reduced?
+// when you click remove, you update the whole map.
+// In that map, if the number of envs is more than 2 then all of them get the remove button.
 
 const elements = {};
+const defaultEnvironmentCount = 2;
+let environmentIndex = defaultEnvironmentCount; // Sets a unique ID on each environment
 
-const addEnvironment = () => {
-    site.environments = [...site.environments, { name: '', url: '' }];
-};
 
-const setupInitialEnvironments = () => {
-    const defaultEnvironmentCount = 2;
+// Helpers
 
-    for (let i = 0; i < defaultEnvironmentCount; i++) {
-        addEnvironment();
-    }
-};
-
-const dispatchUpdateEnvironmentsEvent = element => {
-    const updateEvent = new CustomEvent(events.updateEnvs, {
-        detail: 'test',
+const _dispatchUpdateEnvironmentsEvent = element => {
+    const updateEvent = new CustomEvent(customEvents.updateEnvs, {
         bubbles: true
     });
 
     element.dispatchEvent(updateEvent);
 };
 
-const createEnvironment = index => {
-    const id = (index + 1).toString();
-    const fragment = document.createDocumentFragment();
+const _isRemovable = () => {
+    return siteState.environments.length > 2;
+};
 
-    // TODO: Could form field have an 'eventListeners' property?
-    // eventListeners: { 'input': () => {}, 'blur': () => {} }
-    // So then when you input in the input you can store the value here in sites
-    const nameInputElement = formField('Name', 'input', 'env-' + id + '-name', {
+const _addEnvironmentToState = () => {
+    siteState.environments = [...siteState.environments, { name: '', url: '' }];
+};
+
+// Event Handlers
+
+const _handleRemoveEnv = (index, button) => {
+    siteState.environments.splice(index, 1); // Remove env from array
+    _dispatchUpdateEnvironmentsEvent(button)
+};
+
+const _handleAddEnv = (button) => {
+    _addEnvironmentToState();
+    _dispatchUpdateEnvironmentsEvent(button)
+};
+
+const createEnvironmentElement = (index, isRemovable) => {
+    const id = (index + 1).toString();
+
+    const environmentElement = document.createElement('div');
+    environmentElement.className = 'environment';
+
+    const formGroupElement = document.createElement('div');
+    formGroupElement.className = 'form-group form-group--right-bias';
+
+    const nameFormField = formField('Name', 'input', 'env-' + id + '-name', {
         type: 'text',
         name: 'environmentName',
         required: true,
         customValidation: null
+    });
+
+    nameFormField.input.addEventListener('input', () => {
     });
 
     const urlInputElement = formField('Url', 'input', 'env-' + id + '-url',{
@@ -62,51 +85,34 @@ const createEnvironment = index => {
         customValidation: null
     });
 
-    const createHeader = () => {
-        const headerElement = document.createElement('header');
-        headerElement.className = 'environment__header';
+    formGroupElement.appendChild(nameFormField.field);
+    formGroupElement.appendChild(urlInputElement.field);
 
-        const idElement = document.createElement('div');
-        idElement.className = 'environment__id';
-        idElement.textContent = id;
+    environmentElement.appendChild(formGroupElement);
 
-        headerElement.appendChild(idElement);
+    if (isRemovable) {
+        const removeEnvButton = document.createElement('button');
+        removeEnvButton.type = 'button';
+        removeEnvButton.className = 'button button--danger button--small button--icon environment__remove';
+        removeEnvButton.innerHTML = `
+            ${icons.remove(10, 10)}<span class="visually-hidden">Remove environment</span>
+        `;
 
-        // Only added envs can be removed
-        if (id > 2) {
-            const removeEnvElement = document.createElement('button');
-            removeEnvElement.type = 'button';
-            removeEnvElement.textContent = 'Remove';
-            removeEnvElement.className = 'button button--link button--icon button--small environment__control';
+        removeEnvButton.addEventListener('click', (event) => _handleRemoveEnv(index, event.target));
 
-            removeEnvElement.addEventListener('click', () => {
-                site.environments.splice(index, 1);
-                dispatchUpdateEnvironmentsEvent(removeEnvElement);
-            });
+        environmentElement.appendChild(removeEnvButton);
+    }
 
-            headerElement.appendChild(removeEnvElement);
-        }
-
-        return headerElement;
-    };
-
-    const headerElement = createHeader();
-
-    fragment.appendChild(headerElement);
-    fragment.appendChild(nameInputElement);
-    fragment.appendChild(urlInputElement);
-
-    return fragment;
+    return environmentElement;
 };
 
 const createEnvironments = () => {
     const fragment = document.createDocumentFragment();
 
-    const environments = site.environments.map((env, index) => {
+    const environments = siteState.environments.map((env, index) => {
         const environmentElement = document.createElement('div');
         environmentElement.className = 'environment';
-
-        const environment = createEnvironment(index);
+        const environment = createEnvironmentElement(index, _isRemovable());
 
         environmentElement.appendChild(environment);
 
@@ -118,61 +124,75 @@ const createEnvironments = () => {
     return fragment;
 };
 
-const createBaseForm = () => {
-    elements.form = document.createElement('form');
-
-    const siteNameFieldElement = formField('Site Name', 'input', 'site-name', {
-        type: 'text',
-        name: 'siteName',
-        required: true,
-        modifier: 'large',
-        customValidation: null
-    });
-
-    siteNameFieldElement.classList.add('mb-5');
-
-    const environmentsHeadingElement = document.createElement('h3');
-    environmentsHeadingElement.textContent = 'Environments';
-
-    elements.form.appendChild(siteNameFieldElement);
-    elements.form.appendChild(environmentsHeadingElement);
-
-    return elements.form;
-};
-
-const _handleUpdateEnvs = () => {
+const rerenderEnvironments = () => {
     elements.environmentsContainer.innerHTML = '';
     const environments = createEnvironments();
     elements.environmentsContainer.appendChild(environments);
 };
 
-const _setupTemporaryEventListeners = () => {
-    document.addEventListener(events.updateEnvs, _handleUpdateEnvs);
+const setupInitialEnvironments = () => {
+    const defaultEnvironmentCount = 2;
+
+    for (let i = 0; i < defaultEnvironmentCount; i++) {
+        _addEnvironmentToState();
+    }
 };
 
-const _removeTemporaryEventListeners = () => {
-    document.removeEventListener(events.updateEnvs, _handleUpdateEnvs);
+const createBaseForm = () => {
+    elements.form = document.createElement('form');
+
+    const siteNameFormField = formField('Site Name', 'input', 'site-name', {
+        type: 'text',
+        name: 'siteName',
+        required: true,
+        modifier: 'hero',
+        customValidation: null
+    });
+
+    siteNameFormField.field.classList.add('mb-5');
+
+    const environmentsHeadingElement = document.createElement('h3');
+    environmentsHeadingElement.textContent = 'Environments';
+
+    elements.form.appendChild(siteNameFormField.field);
+    elements.form.appendChild(environmentsHeadingElement);
+
+    return elements.form;
 };
+
+const _setupTemporaryEventListeners = () => {
+    document.addEventListener(customEvents.updateEnvs, () => rerenderEnvironments());
+};
+
+// This removal will happen on save or on cancel
+// Modal close may need to take a callback somehow
+// const _removeTemporaryEventListeners = () => {
+//     document.removeEventListener(customEvents.updateEnvs, _handleUpdateEnvs);
+// };
 
 const createModalForm = () => {
     createBaseForm();
     setupInitialEnvironments();
 
-    elements.environmentsContainer = document.createElement('div');
+    const environmentsContainer = document.createElement('div');
+    environmentsContainer.className = 'mb-2';
+
+    // Builds the environments first time
+    elements.environmentsContainer = environmentsContainer;
+    const environments = createEnvironments();
+    elements.environmentsContainer.appendChild(environments);
+
     elements.form.appendChild(elements.environmentsContainer);
 
     const addEnvButton = document.createElement('button');
     addEnvButton.type = 'button';
-    addEnvButton.className = 'button button--link button--icon';
+    addEnvButton.className = 'button button--small button--icon';
     addEnvButton.innerHTML = `
-        ${icons.add}
+        ${icons.add(10, 10)}
         Add environment
     `;
 
-    addEnvButton.addEventListener('click', e => {
-        addEnvironment();
-        dispatchUpdateEnvironmentsEvent(e.target);
-    });
+    addEnvButton.addEventListener('click', e => _handleAddEnv(e.target));
 
     elements.addEnvironment = addEnvButton;
 
@@ -183,24 +203,21 @@ const createModalForm = () => {
 
 const newSite = () => {
     const button = document.querySelector('[data-new-site]');
-
     if (!button) return;
 
     _setupTemporaryEventListeners();
 
     button.addEventListener('click', () => {
-        site.name = null;
-        site.environments = [];
+        const modalForm = createModalForm();
 
         const newSiteModal = modal.create({
-            content: createModalForm()
+            content: modalForm
         });
 
         awaitElementRender(newSiteModal)
             .then(() => {
-                // This is here because it needs to be in the DOM before it dispatches event
-                dispatchUpdateEnvironmentsEvent(newSiteModal);
-                modal.show(newSiteModal)
+                modal.show(newSiteModal);
+                autofocus(modalForm);
             });
     });
 };
