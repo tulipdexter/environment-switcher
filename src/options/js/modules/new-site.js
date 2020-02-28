@@ -1,33 +1,22 @@
 import {autofocus} from "./autofocus";
 import {customEvents} from "../util/custom-events";
-import {formField} from "./form";
+import {formField} from "./form/form";
+import {validate} from "./form/validate";
 import {icons} from "./icons";
 import {modal} from "./modal";
 import {awaitElementRender} from "../util";
-import {rerender} from "preact";
 
-// When you click edit, re-fetch the information
-// from the storage but only get that site name.
-// site: { name: bla, environments: [ { name: bla, url: bla }, { name: bla, url: bla }] }
+// TODO
+// This file will become 'site-editor'.
+// It's init method will take an option site object.
+// inside that method it's siteState = site || { site: {bla bla}
 
-// When you click add new, need to set up site structure in here somewhere.
-
-// When save, need to put something to storage.
-// TODO: Before any updateEnvironments is called, make sure the value of the inputs is added
-// to this object.
 const siteState = {
     name: '',
     environments: []
 };
 
-// Should ONLY rerender the whole environments list _if_ the number of items has reduced?
-// when you click remove, you update the whole map.
-// In that map, if the number of envs is more than 2 then all of them get the remove button.
-
 const elements = {};
-const defaultEnvironmentCount = 2;
-let environmentIndex = defaultEnvironmentCount; // Sets a unique ID on each environment
-
 
 // Helpers
 
@@ -59,6 +48,32 @@ const _handleAddEnv = (button) => {
     _dispatchUpdateEnvironmentsEvent(button)
 };
 
+const _handleSiteNameChange = (input) => {
+    const value = input.value;
+
+    if (value !== siteState.siteName) {
+        siteState.siteName = value;
+    }
+};
+
+// Might need to split the name at the dash url-
+const _handleEnvironmentChange = (input, index) => {
+    console.log('handle environment', input, index);
+    // validate.input(input);
+
+    const {name, value} = input;
+    const sanitisedName = name.split('-').pop().split('-')[0];
+    const envs = [...siteState.environments];
+
+    envs[index] = {
+        ...envs[index],
+        [sanitisedName]: value
+    };
+
+    siteState.environments = envs;
+    // this.validateForm();
+};
+
 const createEnvironmentElement = (index, isRemovable) => {
     const id = (index + 1).toString();
 
@@ -70,20 +85,20 @@ const createEnvironmentElement = (index, isRemovable) => {
 
     const nameFormField = formField('Name', 'input', 'env-' + id + '-name', {
         type: 'text',
-        name: 'environmentName',
+        name: 'env-' + id + '-name',
         required: true,
         customValidation: null
-    });
-
-    nameFormField.input.addEventListener('input', () => {
     });
 
     const urlInputElement = formField('Url', 'input', 'env-' + id + '-url',{
-        type: 'text',
-        name: 'url',
+        type: 'url',
+        name: 'env-' + id + '-url',
         required: true,
         customValidation: null
     });
+
+    nameFormField.input.addEventListener('change', event => _handleEnvironmentChange(event.target, index));
+    urlInputElement.input.addEventListener('change', event => _handleEnvironmentChange(event.target, index));
 
     formGroupElement.appendChild(nameFormField.field);
     formGroupElement.appendChild(urlInputElement.field);
@@ -150,6 +165,7 @@ const createBaseForm = () => {
     });
 
     siteNameFormField.field.classList.add('mb-5');
+    siteNameFormField.input.addEventListener('blur', event => _handleSiteNameChange(event.target));
 
     const environmentsHeadingElement = document.createElement('h3');
     environmentsHeadingElement.textContent = 'Environments';

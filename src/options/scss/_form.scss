@@ -1,8 +1,12 @@
+$form-field-padding-y: 0.75rem;
+$form-field-padding-x: 1rem;
+
 .form-field {
     margin-bottom: 2rem;
     border: 1px solid var(--city-lights);
     border-radius: 3px;
     align-items: baseline;
+    position: relative;
 }
 
 .form-field:last-child {
@@ -22,12 +26,12 @@
     color: var(--bay-wharf);
     position: relative;
     z-index: 1;
-    padding: 0.75rem 1rem 0;
+    padding: $form-field-padding-y $form-field-padding-x 0;
 }
 
 .form-field__input {
     font-size: 1.6rem;
-    padding: 0.75rem 1rem;
+    padding: $form-field-padding-y $form-field-padding-x;
     border: 0;
     margin: 0;
     background-color: transparent;
@@ -38,13 +42,15 @@
     border-color: var(--clear-chill);
 }
 
-.form-field__helper {
+.form-field__validation {
     font-size: 1.2rem;
     color: var(--peace);
-    margin-left: 1rem;
+    position: absolute;
+    top: $form-field-padding-y;
+    right: $form-field-padding-x;
 }
 
-.form-field__helper--error {
+.form-field__validation.error {
     color: var(--watermelon);
 }
 
