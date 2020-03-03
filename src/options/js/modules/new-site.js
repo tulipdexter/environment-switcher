@@ -1,7 +1,6 @@
 import {autofocus} from "./autofocus";
 import {customEvents} from "../util/custom-events";
-import {formField} from "./form/form";
-import {validate} from "./form/validate";
+import {FormField} from "./form/form";
 import {icons} from "./icons";
 import {modal} from "./modal";
 import {awaitElementRender} from "../util";
@@ -83,19 +82,21 @@ const createEnvironmentElement = (index, isRemovable) => {
     const formGroupElement = document.createElement('div');
     formGroupElement.className = 'form-group form-group--right-bias';
 
-    const nameFormField = formField('Name', 'input', 'env-' + id + '-name', {
+    const nameFormField = new FormField('Name', 'input', 'env-' + id + '-name', {
         type: 'text',
         name: 'env-' + id + '-name',
         required: true,
         customValidation: null
-    });
+    })
+        .create();
 
-    const urlInputElement = formField('Url', 'input', 'env-' + id + '-url',{
+    const urlInputElement = new FormField('Url', 'input', 'env-' + id + '-url',{
         type: 'url',
         name: 'env-' + id + '-url',
         required: true,
         customValidation: null
-    });
+    })
+        .create();
 
     nameFormField.input.addEventListener('change', event => _handleEnvironmentChange(event.target, index));
     urlInputElement.input.addEventListener('change', event => _handleEnvironmentChange(event.target, index));
@@ -156,13 +157,14 @@ const setupInitialEnvironments = () => {
 const createBaseForm = () => {
     elements.form = document.createElement('form');
 
-    const siteNameFormField = formField('Site Name', 'input', 'site-name', {
+    const siteNameFormField = new FormField('Site Name', 'input', 'site-name', {
         type: 'text',
         name: 'siteName',
         required: true,
         modifier: 'hero',
         customValidation: null
-    });
+    })
+        .create();
 
     siteNameFormField.field.classList.add('mb-5');
     siteNameFormField.input.addEventListener('blur', event => _handleSiteNameChange(event.target));

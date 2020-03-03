@@ -10,79 +10,91 @@ const classNames = {
     error: 'error'
 };
 
-const handleInputChange = input => {
-    let validationElement;
-    const validationMessage = validate.input(input);
+const FormField = class {
+    constructor(label, tagName, id, options) {
+        this._label = label;
+        this._tagName = tagName;
+        this._id = id;
+        this._options = options;
 
-    if (validationMessage.length) {
-        if (!validationElement) {
-            validationElement = document.createElement('span');
-            validationElement.className = classNames.validation + ' ' + classNames.error;
+        this._formFieldElement = null;
+        this._validationElement = null;
+    }
 
-            // parent node is undefined at this point :disappointed:
-            validationElement.parentNode.appendChild(validationElement);
+    _handleInputChange(input) {
+        const validationMessage = validate.input(input);
+
+        if (validationMessage.length) {
+            if (!this._validationElement) {
+                this._validationElement = this._createValidationElement();
+            }
+
+            this._validationElement.textContent = validationMessage;
+            this._formFieldElement.append(this._validationElement);
         }
+    }
 
-        validationElement.textContent = validationMessage;
+    _createValidationElement() {
+        const validationElement = document.createElement('span');
+        validationElement.className = classNames.validation + ' ' + classNames.error;
+
+        return validationElement;
+    }
+
+    _createFormFieldElement(modifier) {
+        const fieldElement = document.createElement('div');
+        let className = classNames.field;
+
+        if (modifier) className += (' ' + classNames.field + '--' + modifier);
+
+        fieldElement.className = className;
+
+        return fieldElement;
+    }
+
+    _createLabelElement(label, id) {
+        const labelElement = document.createElement('label');
+        labelElement.className = classNames.label;
+        labelElement.textContent = label;
+        labelElement.setAttribute('for', id);
+
+        return labelElement;
+    }
+
+    _createInputElement(type, name, id, required, customValidation) {
+        const inputElement = document.createElement(this._tagName);
+
+        inputElement.type = type;
+        inputElement.name = name;
+        inputElement.id = id;
+        inputElement.required = required && 'required';
+
+        inputElement.className = classNames.input;
+
+        inputElement.addEventListener('change', event => this._handleInputChange(event.target));
+        inputElement.addEventListener('focus', () => this._formFieldElement.classList.add(classNames.focus));
+        inputElement.addEventListener('blur', () => this._formFieldElement.classList.remove(classNames.focus));
+
+        return inputElement;
+    }
+
+    create() {
+        const {type, name, required, modifier, customValidation} = this._options;
+
+        const formFieldElement = this._createFormFieldElement(modifier);
+        const labelElement = this._createLabelElement(this._label, this._id);
+        const inputElement = this._createInputElement(type, name, this._id, required, customValidation);
+
+        formFieldElement.appendChild(labelElement);
+        formFieldElement.appendChild(inputElement);
+
+        this._formFieldElement = formFieldElement;
+
+        return {
+            field: formFieldElement,
+            input: inputElement
+        }
     }
 };
 
-const input = (type, name, id, required, customValidation) => {
-    const input = document.createElement('input');
-
-    input.type = type;
-    input.name = name;
-    input.id = id;
-    input.required = required && 'required';
-
-    input.className = classNames.input;
-
-    input.addEventListener('change', event => handleInputChange(event.target));
-
-    return input;
-};
-
-const formField = (label, elementName, id, options) => {
-    const {type, name, required, modifier, customValidation} = options;
-
-    const fieldElement = document.createElement('div');
-    fieldElement.className = classNames.field;
-
-    if (modifier) {
-        fieldElement.classList.add('form-field--' + modifier);
-    }
-
-    const labelElement = document.createElement('label');
-    labelElement.className = classNames.label;
-    labelElement.textContent = label;
-    labelElement.setAttribute('for', id);
-
-    const inputElement = input(type, name, id, required, customValidation);
-
-    inputElement.addEventListener('focus', () => {
-        fieldElement.classList.add(classNames.focus);
-    });
-
-    inputElement.addEventListener('input', () => {
-        if (inputElement.value) {
-            fieldElement.classList.add(classNames.value);
-        } else {
-            fieldElement.classList.remove(classNames.value)
-        }
-    });
-
-    inputElement.addEventListener('blur', () => {
-        fieldElement.classList.remove(classNames.focus);
-    });
-
-    fieldElement.appendChild(labelElement);
-    fieldElement.appendChild(inputElement);
-
-    // Return an object so that the caller of `formField` can
-    return {
-        field: fieldElement,
-        input: inputElement
-    };
-};
-
-export {formField};
+export {FormField};
