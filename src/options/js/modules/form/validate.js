@@ -10,7 +10,7 @@ const validate = {
         const valueMissing = input.validity.valueMissing;
         let valid = input.validity.valid;
 
-        let message;
+        let message = '';
 
         if (valueMissing) {
             message = messages.required;

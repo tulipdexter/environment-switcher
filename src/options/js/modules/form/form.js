@@ -24,6 +24,12 @@ const FormField = class {
     _handleInputChange(input) {
         const validationMessage = validate.input(input);
 
+        // TODO: why this IDE warning?
+        if (!validationMessage.length && this._validationElement) {
+            this._validationElement.remove();
+            this._validationElement = null;
+        }
+
         if (validationMessage.length) {
             if (!this._validationElement) {
                 this._validationElement = this._createValidationElement();

@@ -10,11 +10,7 @@ import {awaitElementRender} from "../util";
 // It's init method will take an option site object.
 // inside that method it's siteState = site || { site: {bla bla}
 
-const siteState = {
-    name: '',
-    environments: []
-};
-
+const siteState = {};
 const elements = {};
 
 // Helpers
@@ -148,6 +144,11 @@ const rerenderEnvironments = () => {
 
 const setupInitialEnvironments = () => {
     const defaultEnvironmentCount = 2;
+    // This needs to happen here because it resets the site when
+    // you click the add site button
+    siteState.name = '';
+    siteState.environments = [];
+
 
     for (let i = 0; i < defaultEnvironmentCount; i++) {
         _addEnvironmentToState();
