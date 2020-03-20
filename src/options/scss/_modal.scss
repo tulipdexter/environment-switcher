@@ -1,5 +1,6 @@
 .modal {
     position: absolute;
+    background-color: white;
     top: 0;
     left: 0;
     width: 100vw;
@@ -11,15 +12,6 @@
     &.show {
         opacity: 1;
     }
-}
-
-.modal__backdrop {
-    background-color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
 }
 
 .modal__close {
@@ -39,10 +31,11 @@
     }
 }
 
-.modal__content {
-    position: relative;
+.modal__container {
+    position: relative; // For the close button
     max-width: 750px;
     margin: 4rem auto;
+    padding: 0 2rem;
 }
 
 .modal__title {
@@ -52,12 +45,11 @@
 }
 
 .modal__footer {
-    margin: 2rem -3rem 0;
-    padding: 2rem 3rem 0;
-    border-top: 1px solid var(--city-lights);
+    margin: 5rem 0;
+    padding: 2rem 0 0;
     text-align: right;
 }
 
 .modal__footer > button {
-    margin-left: 1rem;
+    margin-left: 2rem;
 }

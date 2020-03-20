@@ -19,25 +19,48 @@ const FormField = class {
 
         this._formFieldElement = null;
         this._validationElement = null;
+        this._validField = true;
+
+        // this binding for event handlers
+        this._handleInvalidInput = this._handleInvalidInput.bind(this);
+        this._createValidationElement = this._createValidationElement.bind(this);
     }
 
-    _handleInputChange(input) {
-        const validationMessage = validate.input(input);
-
-        // TODO: why this IDE warning?
-        if (!validationMessage.length && this._validationElement) {
-            this._validationElement.remove();
-            this._validationElement = null;
+    _handleInvalidInput(event) {
+        console.log(event);
+        if (!this._validationElement) {
+            this._validationElement = this._createValidationElement();
         }
 
-        if (validationMessage.length) {
-            if (!this._validationElement) {
-                this._validationElement = this._createValidationElement();
-            }
+        // YOU ARE HERE.
+        // STATIC STRING 'test' needs to become the customValidityMessage
+        // Might be in the event?
+        this._validationElement.textContent = event.target.validationMessage;
+        this._formFieldElement.append(this._validationElement);
+    }
 
-            this._validationElement.textContent = validationMessage;
-            this._formFieldElement.append(this._validationElement);
-        }
+    _handleInputChange(event) {
+        const input = event.target;
+        validate.input(input);
+        input.checkValidity();
+        console.log('hello');
+        // const validationMessage = validate.input(input);
+        // const isValid = validationMessage.length === 0;
+        // const validStateChanged = isValid !== this._validField;
+        //
+        // // Set the state if it's changed
+        // if (validStateChanged) this._validField = isValid;
+        //
+        // if (isValid && this._validationElement) {
+        //     this._validationElement.remove();
+        //     this._validationElement = null;
+        // }
+        //
+        // input.addEventListener('invalid', this._handleInvalidInput);
+        //
+        // if (isValid && (validStateChanged)) {
+        //     validate.form(input.closest('form'));
+        // }
     }
 
     _createValidationElement() {
@@ -77,7 +100,8 @@ const FormField = class {
 
         inputElement.className = classNames.input;
 
-        inputElement.addEventListener('change', event => this._handleInputChange(event.target));
+        inputElement.addEventListener('invalid', this._handleInvalidInput);
+        inputElement.addEventListener('change', this._handleInputChange);
         inputElement.addEventListener('focus', () => this._formFieldElement.classList.add(classNames.focus));
         inputElement.addEventListener('blur', () => this._formFieldElement.classList.remove(classNames.focus));
 

@@ -7,7 +7,7 @@ import {awaitElementRender} from "../util";
 
 // TODO
 // This file will become 'site-editor'.
-// It's init method will take an option site object.
+// It's init method will take an optional site object.
 // inside that method it's siteState = site || { site: {bla bla}
 
 const siteState = {};
@@ -53,9 +53,6 @@ const _handleSiteNameChange = (input) => {
 
 // Might need to split the name at the dash url-
 const _handleEnvironmentChange = (input, index) => {
-    console.log('handle environment', input, index);
-    // validate.input(input);
-
     const {name, value} = input;
     const sanitisedName = name.split('-').pop().split('-')[0];
     const envs = [...siteState.environments];
@@ -66,7 +63,6 @@ const _handleEnvironmentChange = (input, index) => {
     };
 
     siteState.environments = envs;
-    // this.validateForm();
 };
 
 const createEnvironmentElement = (index, isRemovable) => {
@@ -105,9 +101,9 @@ const createEnvironmentElement = (index, isRemovable) => {
     if (isRemovable) {
         const removeEnvButton = document.createElement('button');
         removeEnvButton.type = 'button';
-        removeEnvButton.className = 'button button--danger button--small button--icon environment__remove';
+        removeEnvButton.className = 'button button--danger button--link button--icon environment__remove';
         removeEnvButton.innerHTML = `
-            ${icons.remove(10, 10)}<span class="visually-hidden">Remove environment</span>
+            ${icons.remove(16, 16)}<span class="visually-hidden">Remove environment</span>
         `;
 
         removeEnvButton.addEventListener('click', (event) => _handleRemoveEnv(index, event.target));
@@ -149,7 +145,6 @@ const setupInitialEnvironments = () => {
     siteState.name = '';
     siteState.environments = [];
 
-
     for (let i = 0; i < defaultEnvironmentCount; i++) {
         _addEnvironmentToState();
     }
@@ -180,14 +175,33 @@ const createBaseForm = () => {
 };
 
 const _setupTemporaryEventListeners = () => {
-    document.addEventListener(customEvents.updateEnvs, () => rerenderEnvironments());
+    document.addEventListener(customEvents.updateEnvs, rerenderEnvironments);
 };
 
-// This removal will happen on save or on cancel
-// Modal close may need to take a callback somehow
-// const _removeTemporaryEventListeners = () => {
-//     document.removeEventListener(customEvents.updateEnvs, _handleUpdateEnvs);
-// };
+const _removeTemporaryEventListeners = () => {
+    document.removeEventListener(customEvents.updateEnvs, rerenderEnvironments);
+};
+
+const _handleSave = () => {
+    const formValidity = elements.form.checkValidity();
+
+    // modal.close();
+};
+
+const createModalActions = () => {
+    const saveButton = document.createElement('button');
+    saveButton.className = 'button button--positive';
+    // saveButton.setAttribute('disabled', 'disabled');
+    saveButton.addEventListener('click', _handleSave);
+    saveButton.textContent = 'Save Site';
+
+    const cancelButton = document.createElement('button');
+    cancelButton.className = 'button button--muted';
+    cancelButton.addEventListener('click', modal.close);
+    cancelButton.textContent = 'Cancel';
+
+    return [cancelButton, saveButton];
+};
 
 const createModalForm = () => {
     createBaseForm();
@@ -205,7 +219,7 @@ const createModalForm = () => {
 
     const addEnvButton = document.createElement('button');
     addEnvButton.type = 'button';
-    addEnvButton.className = 'button button--small button--icon';
+    addEnvButton.className = 'button button--small button--icon button--link';
     addEnvButton.innerHTML = `
         ${icons.add(10, 10)}
         Add environment
@@ -225,12 +239,15 @@ const newSite = () => {
     if (!button) return;
 
     _setupTemporaryEventListeners();
+    document.addEventListener(customEvents.modalClose, _removeTemporaryEventListeners);
 
     button.addEventListener('click', () => {
         const modalForm = createModalForm();
+        const modalActions = createModalActions();
 
         const newSiteModal = modal.create({
-            content: modalForm
+            body: modalForm,
+            actions: modalActions
         });
 
         awaitElementRender(newSiteModal)

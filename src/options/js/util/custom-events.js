@@ -1,3 +1,4 @@
 export const customEvents = {
-    updateEnvs: 'update.envs'
+    updateEnvs: 'update.envs',
+    modalClose: 'modal.close'
 };

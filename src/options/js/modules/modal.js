@@ -1,50 +1,64 @@
+import {customEvents} from "../util/custom-events";
+
+const elements = {};
+
 export const modal = {
     create: function(options) {
-        // modal element
-        const modalElement = document.createElement('div');
-        modalElement.className = 'modal';
+        if (!options.body) throw new Error('Modal options object must include body');
+
+        elements.modal = document.createElement('div');
+        elements.modal.className = 'modal';
 
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape') {
-                this.remove(modalElement);
+                this.close(elements.modal);
             }
         });
-
-        // backdrop element
-        const backdropElement = document.createElement('div');
-        backdropElement.className = 'modal__backdrop';
 
         // close button element
         const closeButtonElement = document.createElement('button');
         closeButtonElement.innerHTML = '&times;';
         closeButtonElement.className = 'modal__close';
 
-        closeButtonElement.addEventListener('click', () => this.remove(modalElement));
+        closeButtonElement.addEventListener('click', this.close);
 
         // content element
         const contentElement = document.createElement('div');
-        contentElement.className = 'modal__content';
+        contentElement.className = 'modal__container';
 
-        contentElement.appendChild(options.content);
+        contentElement.appendChild(options.body);
 
-        modalElement.appendChild(backdropElement);
-        modalElement.appendChild(closeButtonElement);
-        modalElement.appendChild(contentElement);
+        // footer element
+        if (options.actions && options.actions.length) {
+            const footerElement = document.createElement('div');
+            footerElement.className = 'modal__footer';
 
-        document.body.appendChild(modalElement);
-        return modalElement;
+            options.actions.forEach(action => footerElement.appendChild(action));
+
+            contentElement.appendChild(footerElement);
+        }
+
+        elements.modal.appendChild(closeButtonElement);
+        elements.modal.appendChild(contentElement);
+
+        document.body.appendChild(elements.modal);
+        return elements.modal;
     },
 
-    show: modal => {
-        modal.classList.add('show');
+    show: () => {
+        elements.modal.classList.add('show');
     },
 
-    remove: modal => {
-        // this should remove the show class first,
-        // wait for the transition to end, then remove the element
-        modal.classList.remove('show');
-        modal.addEventListener('transitionend', () => {
-            modal.parentNode.removeChild(modal);
+    close: () => {
+        const closeEvent = new CustomEvent(customEvents.modalClose, {
+            bubbles: true
         });
+
+        elements.modal.classList.remove('show');
+        elements.modal.addEventListener('transitionend', () => {
+            elements.modal.parentNode.removeChild(elements.modal);
+        });
+
+        elements.modal.dispatchEvent(closeEvent);
     }
 };

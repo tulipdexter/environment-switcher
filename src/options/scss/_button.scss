@@ -25,12 +25,27 @@
   color: white;
 }
 
+.button--muted {
+  border-color: var(--bay-wharf);
+  color: var(--prestige-blue);
+}
+
+.button--positive {
+  background: var(--tropical-green);
+  border-color: var(--tropical-green);
+  color: white;
+}
+
 .button--link {
   background: transparent;
   padding: 0;
   border: 0;
   color: var(--clear-chill);
   cursor: pointer;
+}
+
+.button--link.button--danger {
+  color: var(--watermelon);
 }
 
 .button--link:hover {
@@ -42,7 +57,7 @@
 }
 
 .button--small {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   padding: 0.5rem 0.75rem;
 }
 
