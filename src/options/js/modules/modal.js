@@ -4,8 +4,8 @@ import {createElement} from "../util";
 const elements = {};
 
 export const modal = {
-    create: function(options) {
-        if (!options.title || !options.body) throw new Error('Modal options object must include title and body');
+    create: function(content) {
+        if (!content) return;
 
         elements.modal = document.createElement('div');
         elements.modal.className = 'modal';
@@ -16,37 +16,16 @@ export const modal = {
             }
         });
 
-        // content element
-        const contentElement = createElement('div', {
-            className: 'modal__content'
-        });
-
-        // title element
-        const titleElement = createElement('h2', {
-            className: 'modal__title'
-        });
-        titleElement.textContent = options.title;
-
         // close button element
-        const closeButtonElement = createElement('button', {
-            className: 'modal__close'
-        });
+        const closeButtonElement = createElement('button', {className: 'modal__close'});
         closeButtonElement.innerHTML = '&times;';
         closeButtonElement.addEventListener('click', this.close);
 
-        // body element
-        const bodyElement = createElement('div', {
-            className: 'modal__body'
-        });
-        bodyElement.appendChild(options.body);
+        // content element
+        const contentElement = createElement('div', {className: 'modal__content'});
+        contentElement.appendChild(content);
 
-        const modalActions = createElement('div', {className: 'modal__actions'});
-        options.actions.forEach(action => modalActions.appendChild(action));
-
-        contentElement.appendChild(titleElement);
-        contentElement.appendChild(bodyElement);
-        contentElement.appendChild(modalActions);
-
+        // construct it
         elements.modal.appendChild(closeButtonElement);
         elements.modal.appendChild(contentElement);
 

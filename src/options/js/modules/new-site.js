@@ -172,8 +172,6 @@ const createBaseForm = () => {
 
     elements.form.appendChild(siteNameFormField.field);
     elements.form.appendChild(environmentsHeadingElement);
-
-    return elements.form;
 };
 
 const _setupTemporaryEventListeners = () => {
@@ -218,9 +216,26 @@ const createModalActions = () => {
 };
 
 const createModalForm = () => {
-    createBaseForm();
+    const form = createElement('form');
+    const modalBody = createElement('div', {className: 'modal__body'});
+
+    const siteNameFormField = new FormField('Site Name', 'input', 'site-name', {
+        type: 'text',
+        name: 'siteName',
+        required: true,
+        customValidation: null
+    })
+        .create();
+
+    siteNameFormField.field.classList.add('mb-3');
+    siteNameFormField.input.addEventListener('blur', event => _handleSiteNameChange(event.target));
+
+    const environmentsHeadingElement = document.createElement('h3');
+    environmentsHeadingElement.textContent = 'Environments';
+
     setupInitialEnvironments();
 
+    // TODO: handle this elements.* thing
     elements.environmentsContainer = createElement('div', {
         className: 'mb-2'
     });
@@ -228,7 +243,7 @@ const createModalForm = () => {
     // Builds the environments first time
     const environments = createEnvironments();
     elements.environmentsContainer.appendChild(environments);
-    elements.form.appendChild(elements.environmentsContainer);
+    modalBody.appendChild(elements.environmentsContainer);
 
     const addEnvButton = createElement('button', {
         className: 'button button--small button--icon button--link',
@@ -246,39 +261,44 @@ const createModalForm = () => {
 
     elements.addEnvironment = addEnvButton;
 
-    elements.form.appendChild(elements.addEnvironment);
+    modalBody.appendChild(elements.addEnvironment);
 
     const modalActions = createModalActions();
-    elements.form.appendChild(modalActions);
 
-    return elements.form;
+    form.appendChild(modalBody);
+    form.appendChild(modalActions);
+
+    return form;
+};
+
+const createModalContent = () => {
+    const fragment = document.createDocumentFragment();
+    const modalTitle = createElement('h2', {className: 'modal__title'});
+    modalTitle.textContent = 'Create a new site';
+
+    const form = createModalForm();
+    fragment.append(modalTitle);
+    fragment.append(form);
+
+    return fragment;
 };
 
 const newSite = () => {
     const button = document.querySelector('[data-new-site]');
     if (!button) return;
-const modalActions = createElement('div', {
-                className: 'modal__actions'
-            });
 
-            options.actions.forEach(action => modalActions.appendChild(action));
-
-            contentElement.appendChild(modalActions);
     _setupTemporaryEventListeners();
     document.addEventListener(customEvents.modalClose, _removeTemporaryEventListeners);
 
     button.addEventListener('click', () => {
-        const modalForm = createModalForm();
+        const modalContent = createModalContent();
 
-        const newSiteModal = modal.create({
-            title: 'Create a new site',
-            body: modalForm
-        });
+        const newSiteModal = modal.create(modalContent);
 
         awaitElementRender(newSiteModal)
             .then(() => {
                 modal.show(newSiteModal);
-                autofocus(modalForm);
+                autofocus(modalContent);
             });
     });
 };
