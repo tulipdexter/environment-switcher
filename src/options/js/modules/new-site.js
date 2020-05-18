@@ -1,6 +1,7 @@
 import {autofocus} from "./autofocus";
 import {customEvents} from "../util/custom-events";
-import {FormField} from "./form/form";
+import {createElement} from "../util/create-element";
+import {FormField} from "./form/form-field";
 import {icons} from "./icons";
 import {modal} from "./modal";
 import {awaitElementRender} from "../util";
@@ -9,6 +10,8 @@ import {awaitElementRender} from "../util";
 // This file will become 'site-editor'.
 // It's init method will take an optional site object.
 // inside that method it's siteState = site || { site: {bla bla}
+// That means that the object here (elements and state) will need to change.
+// So this may become a class so it can hold state.
 
 const siteState = {};
 const elements = {};
@@ -38,6 +41,7 @@ const _handleRemoveEnv = (index, button) => {
     _dispatchUpdateEnvironmentsEvent(button)
 };
 
+// pass the event to this (will then bind)
 const _handleAddEnv = (button) => {
     _addEnvironmentToState();
     _dispatchUpdateEnvironmentsEvent(button)
@@ -68,11 +72,9 @@ const _handleEnvironmentChange = (input, index) => {
 const createEnvironmentElement = (index, isRemovable) => {
     const id = (index + 1).toString();
 
-    const environmentElement = document.createElement('div');
-    environmentElement.className = 'environment';
 
-    const formGroupElement = document.createElement('div');
-    formGroupElement.className = 'form-group form-group--right-bias';
+    const environmentElement = createElement('div', { className: 'environment' });
+    const formGroupElement = createElement('div', { className: 'form-group form-group--right-bias' });
 
     const nameFormField = new FormField('Name', 'input', 'env-' + id + '-name', {
         type: 'text',
@@ -99,7 +101,9 @@ const createEnvironmentElement = (index, isRemovable) => {
     environmentElement.appendChild(formGroupElement);
 
     if (isRemovable) {
-        const removeEnvButton = document.createElement('button');
+        const removeEnvButton = createElement('button', {
+            className: 'button button--danger button--link button--icon environment__remove'
+        });
         removeEnvButton.type = 'button';
         removeEnvButton.className = 'button button--danger button--link button--icon environment__remove';
         removeEnvButton.innerHTML = `
@@ -118,8 +122,7 @@ const createEnvironments = () => {
     const fragment = document.createDocumentFragment();
 
     const environments = siteState.environments.map((env, index) => {
-        const environmentElement = document.createElement('div');
-        environmentElement.className = 'environment';
+        const environmentElement = createElement('div', { className: 'environment' });
         const environment = createEnvironmentElement(index, _isRemovable());
 
         environmentElement.appendChild(environment);
@@ -151,18 +154,17 @@ const setupInitialEnvironments = () => {
 };
 
 const createBaseForm = () => {
-    elements.form = document.createElement('form');
+    elements.form = createElement('form');
 
     const siteNameFormField = new FormField('Site Name', 'input', 'site-name', {
         type: 'text',
         name: 'siteName',
         required: true,
-        modifier: 'hero',
         customValidation: null
     })
         .create();
 
-    siteNameFormField.field.classList.add('mb-5');
+    siteNameFormField.field.classList.add('mb-3');
     siteNameFormField.input.addEventListener('blur', event => _handleSiteNameChange(event.target));
 
     const environmentsHeadingElement = document.createElement('h3');
@@ -190,36 +192,51 @@ const _handleSave = () => {
 
 const createModalActions = () => {
     const saveButton = document.createElement('button');
-    saveButton.className = 'button button--positive';
+    saveButton.className = 'modal__action modal__action--advance';
     // saveButton.setAttribute('disabled', 'disabled');
     saveButton.addEventListener('click', _handleSave);
-    saveButton.textContent = 'Save Site';
+    saveButton.innerHTML = `
+        Save
+        ${icons.arrowRight()}
+    `;
 
     const cancelButton = document.createElement('button');
-    cancelButton.className = 'button button--muted';
+    cancelButton.className = 'modal__action modal__action--muted';
     cancelButton.addEventListener('click', modal.close);
-    cancelButton.textContent = 'Cancel';
+    cancelButton.innerHTML = `
+        ${icons.arrowLeft()}
+        Cancel
+    `;
 
-    return [cancelButton, saveButton];
+    const modalActions = createElement('div', {
+        className: 'modal__actions'
+    });
+
+    [cancelButton, saveButton].forEach(button => modalActions.append(button));
+
+    return modalActions;
 };
 
 const createModalForm = () => {
     createBaseForm();
     setupInitialEnvironments();
 
-    const environmentsContainer = document.createElement('div');
-    environmentsContainer.className = 'mb-2';
+    elements.environmentsContainer = createElement('div', {
+        className: 'mb-2'
+    });
 
     // Builds the environments first time
-    elements.environmentsContainer = environmentsContainer;
     const environments = createEnvironments();
     elements.environmentsContainer.appendChild(environments);
-
     elements.form.appendChild(elements.environmentsContainer);
 
-    const addEnvButton = document.createElement('button');
-    addEnvButton.type = 'button';
-    addEnvButton.className = 'button button--small button--icon button--link';
+    const addEnvButton = createElement('button', {
+        className: 'button button--small button--icon button--link',
+        attributes: {
+            type: 'button'
+        }
+    });
+
     addEnvButton.innerHTML = `
         ${icons.add(10, 10)}
         Add environment
@@ -231,23 +248,31 @@ const createModalForm = () => {
 
     elements.form.appendChild(elements.addEnvironment);
 
+    const modalActions = createModalActions();
+    elements.form.appendChild(modalActions);
+
     return elements.form;
 };
 
 const newSite = () => {
     const button = document.querySelector('[data-new-site]');
     if (!button) return;
+const modalActions = createElement('div', {
+                className: 'modal__actions'
+            });
 
+            options.actions.forEach(action => modalActions.appendChild(action));
+
+            contentElement.appendChild(modalActions);
     _setupTemporaryEventListeners();
     document.addEventListener(customEvents.modalClose, _removeTemporaryEventListeners);
 
     button.addEventListener('click', () => {
         const modalForm = createModalForm();
-        const modalActions = createModalActions();
 
         const newSiteModal = modal.create({
-            body: modalForm,
-            actions: modalActions
+            title: 'Create a new site',
+            body: modalForm
         });
 
         awaitElementRender(newSiteModal)

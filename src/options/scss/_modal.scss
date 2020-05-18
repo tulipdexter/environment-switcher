@@ -1,6 +1,6 @@
 .modal {
     position: absolute;
-    background-color: white;
+    background-color: rgba(5, 10, 20, 0.9);
     top: 0;
     left: 0;
     width: 100vw;
@@ -16,40 +16,84 @@
 
 .modal__close {
     position: fixed;
-    top: 3rem;
-    right: 3rem;
+    top: 0;
+    right: 0;
     padding: 0;
+    width: 75px;
+    height: 75px;
     border: 0;
     font-size: 7rem;
     line-height: 0.25;
     cursor: pointer;
-    color: var(--peace);
+    color: rgba(255, 255, 255, 0.9);
+    background: transparent;
     font-family: 'Times New Roman', serif;
+    outline: none;
 
     &:hover {
         color: var(--clear-chill);
     }
 }
 
-.modal__container {
+.modal__content {
     position: relative; // For the close button
-    max-width: 750px;
-    margin: 4rem auto;
-    padding: 0 2rem;
+    border-radius: 10px;
+    max-width: 650px;
+    margin: 6rem auto;
+    box-shadow: 0 1px 10px rgba(0,0,0,0.6);
+    overflow: hidden;
 }
 
 .modal__title {
-    font-size: 3rem;
+    font-size: 2.8rem;
     text-align: center;
-    margin-bottom: 5rem;
+    margin-bottom: 0;
+    padding: 2.5rem 2rem 0;
+    background: white;
+    color: var(--prestige-blue);
 }
 
-.modal__footer {
-    margin: 5rem 0;
-    padding: 2rem 0 0;
-    text-align: right;
+.modal__body {
+    background-color: white;
+    padding: 3rem 2rem;
 }
 
-.modal__footer > button {
-    margin-left: 2rem;
+.modal__actions {
+    background: white;
+    display: flex;
+}
+
+.modal__action {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    text-transform: uppercase;
+    align-items: center;
+    padding: 2rem;
+    font-size: 1.3rem;
+    text-align: center;
+    border: 0;
+    font-weight: 600;
+
+    path {
+        fill: currentColor;
+    }
+}
+
+.modal__action--advance {
+    background-color: var(--clear-chill);
+    color: white;
+
+    svg {
+        margin-left: 1rem;
+    }
+}
+
+.modal__action--muted {
+    background-color: var(--city-lights);
+    color: var(--prestige-blue);
+
+    svg {
+        margin-right: 1rem;
+    }
 }

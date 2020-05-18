@@ -1,4 +1,5 @@
 export const customEvents = {
     updateEnvs: 'update.envs',
-    modalClose: 'modal.close'
+    modalClose: 'modal.close',
+    validateForm: 'form.validate'
 };

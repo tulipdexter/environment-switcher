@@ -1,10 +1,11 @@
 import {customEvents} from "../util/custom-events";
+import {createElement} from "../util";
 
 const elements = {};
 
 export const modal = {
     create: function(options) {
-        if (!options.body) throw new Error('Modal options object must include body');
+        if (!options.title || !options.body) throw new Error('Modal options object must include title and body');
 
         elements.modal = document.createElement('div');
         elements.modal.className = 'modal';
@@ -15,28 +16,36 @@ export const modal = {
             }
         });
 
-        // close button element
-        const closeButtonElement = document.createElement('button');
-        closeButtonElement.innerHTML = '&times;';
-        closeButtonElement.className = 'modal__close';
+        // content element
+        const contentElement = createElement('div', {
+            className: 'modal__content'
+        });
 
+        // title element
+        const titleElement = createElement('h2', {
+            className: 'modal__title'
+        });
+        titleElement.textContent = options.title;
+
+        // close button element
+        const closeButtonElement = createElement('button', {
+            className: 'modal__close'
+        });
+        closeButtonElement.innerHTML = '&times;';
         closeButtonElement.addEventListener('click', this.close);
 
-        // content element
-        const contentElement = document.createElement('div');
-        contentElement.className = 'modal__container';
+        // body element
+        const bodyElement = createElement('div', {
+            className: 'modal__body'
+        });
+        bodyElement.appendChild(options.body);
 
-        contentElement.appendChild(options.body);
+        const modalActions = createElement('div', {className: 'modal__actions'});
+        options.actions.forEach(action => modalActions.appendChild(action));
 
-        // footer element
-        if (options.actions && options.actions.length) {
-            const footerElement = document.createElement('div');
-            footerElement.className = 'modal__footer';
-
-            options.actions.forEach(action => footerElement.appendChild(action));
-
-            contentElement.appendChild(footerElement);
-        }
+        contentElement.appendChild(titleElement);
+        contentElement.appendChild(bodyElement);
+        contentElement.appendChild(modalActions);
 
         elements.modal.appendChild(closeButtonElement);
         elements.modal.appendChild(contentElement);

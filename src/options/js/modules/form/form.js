@@ -1,130 +1,28 @@
-import {validate} from "./validate";
+/**
+ * what if form was a class
+ * new Form
+ * Then that would do something like
+ * addEventListener for custom event that is fired whenever an input's validity state changes
+ * you could pass a callback option that is called (with the this value?) when
+ */
 
-const classNames = {
-    field: 'form-field',
-    label: 'form-field__label',
-    input: 'form-field__input',
-    validation: 'form-field__validation',
-    focus: 'focus',
-    value: 'value',
-    error: 'error'
-};
-
-const FormField = class {
-    constructor(label, tagName, id, options) {
-        this._label = label;
-        this._tagName = tagName;
-        this._id = id;
+const Form = class {
+    constructor(options) {
         this._options = options;
-
-        this._formFieldElement = null;
-        this._validationElement = null;
-        this._validField = true;
-
-        // this binding for event handlers
-        this._handleInvalidInput = this._handleInvalidInput.bind(this);
-        this._createValidationElement = this._createValidationElement.bind(this);
-    }
-
-    _handleInvalidInput(event) {
-        console.log(event);
-        if (!this._validationElement) {
-            this._validationElement = this._createValidationElement();
-        }
-
-        // YOU ARE HERE.
-        // STATIC STRING 'test' needs to become the customValidityMessage
-        // Might be in the event?
-        this._validationElement.textContent = event.target.validationMessage;
-        this._formFieldElement.append(this._validationElement);
-    }
-
-    _handleInputChange(event) {
-        const input = event.target;
-        validate.input(input);
-        input.checkValidity();
-        console.log('hello');
-        // const validationMessage = validate.input(input);
-        // const isValid = validationMessage.length === 0;
-        // const validStateChanged = isValid !== this._validField;
-        //
-        // // Set the state if it's changed
-        // if (validStateChanged) this._validField = isValid;
-        //
-        // if (isValid && this._validationElement) {
-        //     this._validationElement.remove();
-        //     this._validationElement = null;
-        // }
-        //
-        // input.addEventListener('invalid', this._handleInvalidInput);
-        //
-        // if (isValid && (validStateChanged)) {
-        //     validate.form(input.closest('form'));
-        // }
-    }
-
-    _createValidationElement() {
-        const validationElement = document.createElement('span');
-        validationElement.className = classNames.validation + ' ' + classNames.error;
-
-        return validationElement;
-    }
-
-    _createFormFieldElement(modifier) {
-        const fieldElement = document.createElement('div');
-        let className = classNames.field;
-
-        if (modifier) className += (' ' + classNames.field + '--' + modifier);
-
-        fieldElement.className = className;
-
-        return fieldElement;
-    }
-
-    _createLabelElement(label, id) {
-        const labelElement = document.createElement('label');
-        labelElement.className = classNames.label;
-        labelElement.textContent = label;
-        labelElement.setAttribute('for', id);
-
-        return labelElement;
-    }
-
-    _createInputElement(type, name, id, required, customValidation) {
-        const inputElement = document.createElement(this._tagName);
-
-        inputElement.type = type;
-        inputElement.name = name;
-        inputElement.id = id;
-        inputElement.required = required && 'required';
-
-        inputElement.className = classNames.input;
-
-        inputElement.addEventListener('invalid', this._handleInvalidInput);
-        inputElement.addEventListener('change', this._handleInputChange);
-        inputElement.addEventListener('focus', () => this._formFieldElement.classList.add(classNames.focus));
-        inputElement.addEventListener('blur', () => this._formFieldElement.classList.remove(classNames.focus));
-
-        return inputElement;
     }
 
     create() {
-        const {type, name, required, modifier, customValidation} = this._options;
+        const {className} = this._options;
+        const formElement = document.createElement('form');
 
-        const formFieldElement = this._createFormFieldElement(modifier);
-        const labelElement = this._createLabelElement(this._label, this._id);
-        const inputElement = this._createInputElement(type, name, this._id, required, customValidation);
+        if (className) formElement.className = className;
 
-        formFieldElement.appendChild(labelElement);
-        formFieldElement.appendChild(inputElement);
-
-        this._formFieldElement = formFieldElement;
-
-        return {
-            field: formFieldElement,
-            input: inputElement
-        }
+        // TODO: you are here
+        // Problem in modal, the footer should be inside the form.
+        // The button needs to submit the form to whatever the action of the form is
+        // The callback will have to prevent default on the form (submit).
+        //
     }
 };
 
-export {FormField};
+export {Form};
