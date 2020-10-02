@@ -1,28 +1,27 @@
-// Validate
-
 const messages = {
     valueMissing: 'Required',
     typeMismatchUrl: 'Invalid Url'
 };
 
-const validate = {
-    input: input => {
-        const valueMissing = input.validity.valueMissing;
-        const typeMismatch = input.validity.typeMismatch;
+const validate = element => {
+    element.setCustomValidity('');
 
-        if (valueMissing) {
-            input.setCustomValidity(messages.valueMissing);
-        } else if (typeMismatch) {
-            if (input.type === 'url') {
-                input.setCustomValidity(messages.typeMismatchUrl);
-            }
-        } else {
-            input.setCustomValidity('');
-        }
-    },
-    form: form => {
-        form.checkValidity();
+    const valueMissing = element.validity.valueMissing;
+    const typeMismatch = element.validity.typeMismatch;
+
+    if (valueMissing) {
+        element.setCustomValidity(messages.valueMissing);
     }
+
+    if (element.tagName === 'INPUT') {
+        if (typeMismatch) {
+            if (element.type === 'url') {
+                element.setCustomValidity(messages.typeMismatchUrl);
+            }
+        }
+    }
+
+    return element.checkValidity();
 };
 
 export {validate};

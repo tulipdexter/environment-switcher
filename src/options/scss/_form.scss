@@ -43,7 +43,7 @@ $form-field-padding-x: 1.2rem;
 }
 
 .form-field__validation {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--peace);
     position: absolute;
     top: $form-field-padding-y;
@@ -99,7 +99,7 @@ $form-field-padding-x: 1.2rem;
 
 .form-group--right-bias {
     .form-field:first-child {
-        max-width: 28%;
+        max-width: 30%;
     }
 }
 

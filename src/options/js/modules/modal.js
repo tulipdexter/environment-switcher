@@ -8,7 +8,7 @@ export const modal = {
         if (!content) return;
 
         elements.modal = document.createElement('div');
-        elements.modal.className = 'modal';
+        elements.modal.className = 'modal fade';
 
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape') {
@@ -23,10 +23,11 @@ export const modal = {
 
         // content element
         const contentElement = createElement('div', {className: 'modal__content'});
+
+        contentElement.appendChild(closeButtonElement);
         contentElement.appendChild(content);
 
         // construct it
-        elements.modal.appendChild(closeButtonElement);
         elements.modal.appendChild(contentElement);
 
         document.body.appendChild(elements.modal);
@@ -35,6 +36,7 @@ export const modal = {
 
     show: () => {
         elements.modal.classList.add('show');
+        document.body.classList.add('has-modal');
     },
 
     close: () => {
@@ -45,6 +47,7 @@ export const modal = {
         elements.modal.classList.remove('show');
         elements.modal.addEventListener('transitionend', () => {
             elements.modal.parentNode.removeChild(elements.modal);
+            document.body.classList.remove('has-modal');
         });
 
         elements.modal.dispatchEvent(closeEvent);

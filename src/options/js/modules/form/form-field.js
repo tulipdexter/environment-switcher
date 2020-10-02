@@ -1,6 +1,13 @@
 import {validate} from "./validate";
 import {customEvents} from "../../util/custom-events";
 
+/**
+ * Each field controls it's own state?
+ * The new site stuff doesn't need the id to be '1', '2,'3'.
+ * if 2 is deleted, '1', '3' is fine.
+ * So then the re-render becomes redundant
+ */
+
 const classNames = {
     field: 'form-field',
     label: 'form-field__label',
@@ -36,8 +43,7 @@ const FormField = class {
 
     _handleInputChange(event) {
         const input = event.target;
-        validate.input(input);
-        const isInputValid = input.checkValidity();
+        const isInputValid = validate(input);
 
         if (isInputValid) {
             if (this._validationElement) {
@@ -80,7 +86,7 @@ const FormField = class {
         return labelElement;
     }
 
-    _createInputElement(type, name, id, required, customValidation) {
+    _createInputElement(type, name, id, required) {
         const inputElement = document.createElement(this._tagName);
 
         inputElement.type = type;
@@ -89,6 +95,8 @@ const FormField = class {
         inputElement.required = required && 'required';
 
         inputElement.className = classNames.input;
+
+        validate(inputElement); // Needs validating when created to setup the custom validity
 
         inputElement.addEventListener('invalid', this._handleInvalidInput);
         inputElement.addEventListener('change', this._handleInputChange);

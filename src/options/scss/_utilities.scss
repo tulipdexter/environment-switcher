@@ -121,3 +121,30 @@
     transform: translate(-50%, -50%);
     top: 0;
 }
+
+.fade {
+    opacity: 0;
+    transition: opacity .25s ease;
+}
+
+.scale {
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform .25s ease;
+}
+
+.scale.fade {
+    transition: transform .25s ease .25s, opacity .25s ease;
+}
+
+.scale.fade.show {
+    transition: transform .25s ease, opacity .25s ease .25s;
+}
+
+.scale.show {
+    transform: scaleY(1);
+}
+
+.fade.show {
+    opacity: 1;
+}
